@@ -24,6 +24,7 @@ faq.py
 timeline.py
 delegacias.py
 alertas.py
+chat.py
 services/            
 Cada aba do site virou um módulo de rota próprio — fica fácil de mexer
 em uma parte sem afetar as outras, e cada pessoa consegue trabalhar
@@ -56,6 +57,33 @@ o banco de verdade, os pontos de integração são:
 
 Nada na lógica das rotas depende de SQLite especificamente — trocar
 o banco é basicamente trocar a `database_url` e ajustar os models.
+
+## Violeta IA (chat com IA generativa)
+A rota `POST /api/v1/chat/` conecta o chat "Violeta" a uma IA generativa
+real, compatível com a API da OpenAI (funciona com OpenAI, Groq,
+OpenRouter, etc.). Para ativar, crie um arquivo `.env` em `backend/`
+com:
+
+```
+OPENAI_API_KEY=sua-chave-aqui
+# Opcionais (têm valor padrão):
+OPENAI_BASE_URL=https://api.openai.com/v1
+OPENAI_MODEL=gpt-4o-mini
+```
+
+Se `OPENAI_API_KEY` não estiver definida (ou a chamada à IA falhar por
+qualquer motivo — sem internet, chave inválida, timeout, etc.), o
+backend cai automaticamente para respostas locais por palavra-chave,
+então o chat continua funcionando mesmo sem IA configurada.
+
+Em mensagens com sinais de perigo imediato (ex.: "socorro", "ele está
+aqui", "ameaça"), a resposta de segurança (190/180) é sempre gerada
+localmente, sem depender da IA externa — por segurança, essa parte
+nunca é delegada ao modelo de linguagem.
+
+Nenhuma mensagem de chat é salva no banco de dados: o histórico de
+conversa trafega apenas dentro da própria requisição (enviado pelo
+frontend) e não é persistido no servidor.
 
 ## Próximos passos sugeridos
 Autenticação (se for necessário login para alguma aba, tipo admin
