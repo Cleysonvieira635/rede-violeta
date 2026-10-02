@@ -786,116 +786,7 @@
       <button class="filter-btn" onclick="filtrarAlertas('Virtual')">Virtual</button>
       <button class="filter-btn filter-urgente" onclick="filtrarAlertas('__alta__')"><i class="fa-solid fa-triangle-exclamation"></i> Urgentes</button>
     </div>
-    <div id="alertaFeed">
-      <div class="alerta-card urgencia-borda-alta">
-        <div class="alerta-header"><span class="alerta-tipo">Importunação Sexual</span><span class="urgencia-tag urgencia-tag-alta"><i class="fa-solid fa-circle"></i> Alta</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>São Paulo, SP</strong> — Metrô Linha 2-Verde</div>
-        <p class="alerta-desc">Relatos recorrentes de importunação sexual nos vagões entre as estações Paraíso e Ana Rosa nos horários de pico.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 1h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(1)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">18</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-alta">
-        <div class="alerta-header"><span class="alerta-tipo">Perseguição (Stalking)</span><span class="urgencia-tag urgencia-tag-alta"><i class="fa-solid fa-circle"></i> Alta</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Curitiba, PR</strong> — Bairro Água Verde</div>
-        <p class="alerta-desc">Homem seguindo mulheres que saem do trabalho no período noturno. Comportamento identificado em mais de uma ocasião.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 1h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(4)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">9</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-alta">
-        <div class="alerta-header"><span class="alerta-tipo">Violência Doméstica</span><span class="urgencia-tag urgencia-tag-alta"><i class="fa-solid fa-circle"></i> Alta</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Belo Horizonte, MG</strong> — Bairro Santa Efigênia</div>
-        <p class="alerta-desc">Situação de violência doméstica em andamento relatada por vizinhas. Pedido de apoio e orientação à comunidade.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 2h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(3)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">7</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-media">
-        <div class="alerta-header"><span class="alerta-tipo">Assédio Moral</span><span class="urgencia-tag urgencia-tag-media"><i class="fa-solid fa-circle"></i> Média</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Brasília, DF</strong> — Setor Bancário Sul — empresa privada</div>
-        <p class="alerta-desc">Supervisora humilha funcionárias publicamente em reuniões, atribui erros alheios a elas e ameaça demissão sem justificativa. Pelo menos 5 relatos confirmados.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 3h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(7)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">8</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-alta">
-        <div class="alerta-header"><span class="alerta-tipo">Assédio Virtual / Cyberbullying</span><span class="urgencia-tag urgencia-tag-alta"><i class="fa-solid fa-circle"></i> Alta</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Fortaleza, CE</strong> — TikTok / Telegram</div>
-        <p class="alerta-desc">Grupo no Telegram compartilha fotos e vídeos íntimos de mulheres sem consentimento. Vítimas identificadas já acionaram a SaferNet.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 4h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(9)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">22</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-media">
-        <div class="alerta-header"><span class="alerta-tipo">Assédio Virtual / Cyberbullying</span><span class="urgencia-tag urgencia-tag-media"><i class="fa-solid fa-circle"></i> Média</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Rio de Janeiro, RJ</strong> — Instagram / WhatsApp</div>
-        <p class="alerta-desc">Perfis falsos criados para assediar mulheres com mensagens íntimas não solicitadas. Múltiplas vítimas relataram o mesmo padrão.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 5h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(2)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">11</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-alta">
-        <div class="alerta-header"><span class="alerta-tipo">Importunação Sexual</span><span class="urgencia-tag urgencia-tag-alta"><i class="fa-solid fa-circle"></i> Alta</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Recife, PE</strong> — Terminal Integrado de Passageiros</div>
-        <p class="alerta-desc">Homem encosta e faz comentários obscenos em mulheres que aguardam ônibus no período da tarde. Relatado por passageiras em diferentes dias.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 6h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(8)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">12</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-alta">
-        <div class="alerta-header"><span class="alerta-tipo">Violência Física</span><span class="urgencia-tag urgencia-tag-alta"><i class="fa-solid fa-circle"></i> Alta</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Manaus, AM</strong> — Bairro Compensa</div>
-        <p class="alerta-desc">Mulher agredida fisicamente por parceiro em via pública. Vizinhos chamaram a PM. Vítima está em abrigo. Caso em acompanhamento pela Delegacia da Mulher.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 8h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(10)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">6</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-alta">
-        <div class="alerta-header"><span class="alerta-tipo">Perseguição (Stalking)</span><span class="urgencia-tag urgencia-tag-alta"><i class="fa-solid fa-circle"></i> Alta</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Campinas, SP</strong> — Universidade Estadual de Campinas</div>
-        <p class="alerta-desc">Ex-aluno persegue estudante dentro do campus, manda mensagens ameaçadoras e aparece em locais que ela frequenta. Caso registrado na ouvidoria da universidade.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 10h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(11)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">17</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-media">
-        <div class="alerta-header"><span class="alerta-tipo">Assédio Sexual</span><span class="urgencia-tag urgencia-tag-media"><i class="fa-solid fa-circle"></i> Média</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Salvador, BA</strong> — Orla de Ondina</div>
-        <p class="alerta-desc">Grupo de homens abordando mulheres de forma agressiva na orla. Situação especialmente intensa nos finais de semana.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 12h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(6)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">14</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-alta">
-        <div class="alerta-header"><span class="alerta-tipo">Violência Física</span><span class="urgencia-tag urgencia-tag-alta"><i class="fa-solid fa-circle"></i> Alta</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Natal, RN</strong> — Bairro Lagoa Nova</div>
-        <p class="alerta-desc">Mulher foi agredida com socos pelo companheiro após tentar terminar o relacionamento. Filho menor de idade presenciou. Medida protetiva solicitada.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 12h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(17)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">11</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-media">
-        <div class="alerta-header"><span class="alerta-tipo">Assédio Sexual</span><span class="urgencia-tag urgencia-tag-media"><i class="fa-solid fa-circle"></i> Média</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Florianópolis, SC</strong> — Praia de Jurerê</div>
-        <p class="alerta-desc">Homens abordam mulheres que estão sozinhas na praia, fazem comentários sexuais e seguem mesmo após pedido de afastamento. Situações repetidas nos fins de semana.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 14h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(12)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">10</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-media">
-        <div class="alerta-header"><span class="alerta-tipo">Importunação Sexual</span><span class="urgencia-tag urgencia-tag-media"><i class="fa-solid fa-circle"></i> Média</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Belém, PA</strong> — Ver-o-Peso — feira popular</div>
-        <p class="alerta-desc">Mulheres relatam apalpamentos e comentários sexuais na feira, especialmente em dias de maior movimento. Policiamento pedido por feirantes.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 16h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(16)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">7</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-media">
-        <div class="alerta-header"><span class="alerta-tipo">Assédio Sexual</span><span class="urgencia-tag urgencia-tag-media"><i class="fa-solid fa-circle"></i> Média</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Vitória, ES</strong> — Escritório de advocacia — Centro</div>
-        <p class="alerta-desc">Advogada relata que sócio faz comentários sobre seu corpo e envia mensagens com conotação sexual. Dois outros funcionários testemunharam situações.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 18h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(18)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">8</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-alta">
-        <div class="alerta-header"><span class="alerta-tipo">Violência Doméstica</span><span class="urgencia-tag urgencia-tag-alta"><i class="fa-solid fa-circle"></i> Alta</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Goiânia, GO</strong> — Setor Jardim América</div>
-        <p class="alerta-desc">Moradora relata agressões verbais e físicas frequentes. Tentou registrar BO, mas se sentiu intimidada. Vizinhos solicitam apoio de assistência social.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 20h atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(13)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">4</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-media">
-        <div class="alerta-header"><span class="alerta-tipo">Assédio Moral</span><span class="urgencia-tag urgencia-tag-media"><i class="fa-solid fa-circle"></i> Média</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Porto Alegre, RS</strong> — Centro Comercial Iguatemi</div>
-        <p class="alerta-desc">Funcionárias relatam assédio moral sistemático por parte de gerência. Situação já reportada ao RH sem resolução.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 1d atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(5)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">5</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-media">
-        <div class="alerta-header"><span class="alerta-tipo">Assédio Moral</span><span class="urgencia-tag urgencia-tag-media"><i class="fa-solid fa-circle"></i> Média</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>São Luís, MA</strong> — Hospital público regional</div>
-        <p class="alerta-desc">Enfermeiras relatam chefia que distribui tarefas degradantes apenas para mulheres, faz piadas sexistas e pune quem reclama com escalas piores.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 1d atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(14)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">9</span></button></div>
-      </div>
-      <div class="alerta-card urgencia-borda-baixa">
-        <div class="alerta-header"><span class="alerta-tipo">Assédio Virtual / Cyberbullying</span><span class="urgencia-tag urgencia-tag-baixa"><i class="fa-solid fa-circle"></i> Baixa</span></div>
-        <div class="alerta-local"><i class="fa-solid fa-location-dot"></i> <strong>Porto Velho, RO</strong> — Facebook / grupos escolares</div>
-        <p class="alerta-desc">Grupo de alunos cria memes ofensivos com fotos de colegas do sexo feminino e circula em grupos de turma. Direção da escola foi comunicada.</p>
-        <div class="alerta-footer"><span class="alerta-ts"><i class="fa-regular fa-clock"></i> 1d atrás</span><button class="alerta-confirmar" onclick="confirmarAlerta(15)" aria-label="Confirmar alerta"><i class="fa-solid fa-triangle-exclamation"></i> Confirmar <span class="conf-count">3</span></button></div>
-      </div>
-    </div>
+    <div id="alertaFeed"></div>
     <div id="alertaVazio" class="alert alert-info mt-14 is-hidden"><span><i class="fa-solid fa-magnifying-glass"></i></span><span>Nenhum alerta encontrado para este filtro.</span></div>
   </section>
 
@@ -969,7 +860,8 @@ Se houver perigo imediato, procure um local seguro e ligue 190.</div>
   <p class="footer-note">Suas informações são tratadas com sigilo absoluto.</p>
 </footer>
 
-<script>
+<script src="chat-widget.js"></script>
+<script type="text/plain" id="old-script-removed">
 /* ── Mensagem rotativa ── */
 const comfortMessages = [
   "Você merece viver com paz, respeito, segurança e liberdade.",
