@@ -1,19 +1,22 @@
 # Fala Segura — Backend (FastAPI)
+
 Backend do site Fala Segura, campanha Agosto Lilás, com apoio e
 conscientização sobre assédio e violência contra a mulher.
+
 ## Estrutura
+
 app/
-main.py              
+main.py
 core/
-config.py       
+config.py
 db/
-database.py     
+database.py
 models/
-models.py      
+models.py
 schemas/
-schemas.py      
+schemas.py
 api/
-api.py            
+api.py
 routes/
 desabafos.py
 assedio.py
@@ -25,11 +28,14 @@ timeline.py
 delegacias.py
 alertas.py
 chat.py
-services/            
+services/
+
 Cada aba do site virou um módulo de rota próprio — fica fácil de mexer
 em uma parte sem afetar as outras, e cada pessoa consegue trabalhar
 num arquivo diferente sem conflito.
+
 ## Como rodar
+
 python -m venv venv
 source venv/bin/activate  
 pip install -r requirements.txt
@@ -38,6 +44,7 @@ A API sobe em `http://localhost:8000`. A documentação interativa
 (Swagger) fica automaticamente em `http://localhost:8000/docs`.
 
 ## Sobre o banco de dados
+
 Por padrão o projeto está configurado para usar **SQLite local**
 (`fala_segura.db`), só para você já poder rodar e testar a API sem
 depender de nada externo.
@@ -59,12 +66,13 @@ Nada na lógica das rotas depende de SQLite especificamente — trocar
 o banco é basicamente trocar a `database_url` e ajustar os models.
 
 ## Violeta IA (chat com IA generativa)
+
 A rota `POST /api/v1/chat/` conecta o chat "Violeta" a uma IA generativa
 real, compatível com a API da OpenAI (funciona com OpenAI, Groq,
 OpenRouter, etc.). Para ativar, crie um arquivo `.env` em `backend/`
 com:
 
-```
+```env
 OPENAI_API_KEY=sua-chave-aqui
 # Opcionais (têm valor padrão):
 OPENAI_BASE_URL=https://api.openai.com/v1
@@ -86,6 +94,7 @@ conversa trafega apenas dentro da própria requisição (enviado pelo
 frontend) e não é persistido no servidor.
 
 ## Próximos passos sugeridos
+
 Autenticação (se for necessário login para alguma aba, tipo admin
   de denúncias)
 Popular `recursos`, `faq`, `linha_do_tempo` e `delegacias` com dados

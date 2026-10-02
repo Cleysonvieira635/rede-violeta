@@ -20,6 +20,8 @@ Princípios de design (definidos pelo escopo do projeto):
 
 from __future__ import annotations
 
+from typing import Any
+
 import httpx
 
 from app.core.config import settings
@@ -120,18 +122,20 @@ async def gerar_resposta_ia(mensagem: str, historico: list[ChatMensagem]) -> str
     if not settings.ai_enabled:
         return None
 
-    mensagens = [{"role": "system", "content": SYSTEM_PROMPT}]
+    mensagens: list[dict[str, str]] = [
+        {"role": "system", "content": SYSTEM_PROMPT}
+    ]
     for item in historico[-8:]:
         mensagens.append({"role": item.role, "content": item.content})
     mensagens.append({"role": "user", "content": mensagem})
 
-    payload = {
+    payload: dict[str, Any] = {
         "model": settings.openai_model,
         "messages": mensagens,
         "temperature": 0.6,
         "max_tokens": 300,
     }
-    headers = {
+    headers: dict[str, str] = {
         "Authorization": f"Bearer {settings.openai_api_key}",
         "Content-Type": "application/json",
     }
