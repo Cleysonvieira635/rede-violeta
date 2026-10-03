@@ -17,28 +17,28 @@
 </button>
 
 <!-- ─── Acessibilidade ─── -->
-<button class="a11y-fab" id="a11yFab" onclick="toggleA11yPanel()" aria-haspopup="true" aria-expanded="false" aria-controls="a11yPanel" aria-label="Abrir opções de acessibilidade">
+<button class="a11y-fab" id="a11yFab" onclick="painelAcessibilidade()" aria-haspopup="true" aria-expanded="false" aria-controls="a11yPanel" aria-label="Abrir opções de acessibilidade">
   <i class="fa-solid fa-universal-access" aria-hidden="true"></i>
 </button>
 <div class="a11y-panel" id="a11yPanel" role="dialog" aria-modal="false" aria-labelledby="a11yPanelTitle">
   <h2 id="a11yPanelTitle">♿ Acessibilidade
-    <button class="a11y-close" onclick="toggleA11yPanel(false)" aria-label="Fechar opções de acessibilidade">&times;</button>
+    <button class="a11y-close" onclick="painelAcessibilidade(false)" aria-label="Fechar opções de acessibilidade">&times;</button>
   </h2>
   <p class="a11y-sub">Ajuste a página do seu jeito. As preferências ficam salvas neste navegador.</p>
 
   <div class="a11y-option">
     <span class="a11y-label">Tamanho da fonte</span>
     <div class="a11y-font-controls">
-      <button type="button" onclick="a11yFont(-1)" aria-label="Diminuir fonte">A-</button>
-      <button type="button" onclick="a11yFont(0)" aria-label="Fonte padrão">A</button>
-      <button type="button" onclick="a11yFont(1)" aria-label="Aumentar fonte">A+</button>
+      <button type="button" onclick="alterarFonte(-10)" aria-label="Diminuir fonte">A-</button>
+      <button type="button" onclick="alterarFonte(0)" aria-label="Fonte padrão">A</button>
+      <button type="button" onclick="alterarFonte(10)" aria-label="Aumentar fonte">A+</button>
     </div>
   </div>
 
   <div class="a11y-option">
     <span class="a11y-label">Alto contraste</span>
     <label class="a11y-switch">
-      <input type="checkbox" id="a11yContrast" onchange="a11yToggle('a11y-high-contrast', this.checked)" aria-label="Ativar alto contraste">
+      <input type="checkbox" id="a11yContrast" onchange="definirPreferenciaAcessibilidade('contrast', this.checked)" aria-label="Ativar alto contraste">
       <span class="a11y-track"></span><span class="a11y-thumb"></span>
     </label>
   </div>
@@ -46,7 +46,7 @@
   <div class="a11y-option">
     <span class="a11y-label">Ler conteúdo em voz alta</span>
     <label class="a11y-switch">
-      <input type="checkbox" id="a11yReadAloud" onchange="a11yReadAloudToggle(this.checked)" aria-label="Ativar leitura de conteúdo em voz alta ao clicar nos textos">
+      <input type="checkbox" id="a11yReadAloud" onchange="definirPreferenciaAcessibilidade('readOnClick', this.checked)" aria-label="Ativar leitura de conteúdo em voz alta ao clicar nos textos">
       <span class="a11y-track"></span><span class="a11y-thumb"></span>
     </label>
   </div>
@@ -54,7 +54,7 @@
   <div class="a11y-option">
     <span class="a11y-label">Pausar animações</span>
     <label class="a11y-switch">
-      <input type="checkbox" id="a11yMotion" onchange="a11yToggle('a11y-reduce-motion', this.checked)" aria-label="Pausar animações e transições">
+      <input type="checkbox" id="a11yMotion" onchange="definirPreferenciaAcessibilidade('reducedMotion', this.checked)" aria-label="Pausar animações e transições">
       <span class="a11y-track"></span><span class="a11y-thumb"></span>
     </label>
   </div>
@@ -62,14 +62,14 @@
   <div class="a11y-option">
     <span class="a11y-label">Foco visível destacado</span>
     <label class="a11y-switch">
-      <input type="checkbox" id="a11yFocus" onchange="a11yToggle('a11y-strong-focus', this.checked)" aria-label="Destacar foco do teclado">
+      <input type="checkbox" id="a11yFocus" onchange="definirPreferenciaAcessibilidade('focus', this.checked)" aria-label="Destacar foco do teclado">
       <span class="a11y-track"></span><span class="a11y-thumb"></span>
     </label>
   </div>
 
   <div class="a11y-option" style="border-top:1px solid var(--border);">
     <span class="a11y-label">Restaurar padrões</span>
-    <button class="btn btn-outline" style="padding:6px 12px;font-size:.78rem;" onclick="a11yReset()">Resetar</button>
+    <button class="btn btn-outline" style="padding:6px 12px;font-size:.78rem;" onclick="resetAcessibilidade()">Resetar</button>
   </div>
 </div>
 

@@ -38,6 +38,11 @@ function closeAssistant() {
   pararEscuta();
   chatSession++;
   simpleChatHistory = [];
+  const box = document.getElementById('simpleChatBox');
+  if (box) {
+    const welcome = box.querySelector('.simple-bot-msg:first-child');
+    box.replaceChildren(...(welcome ? [welcome] : []));
+  }
 }
 
 window.addEventListener('click', function (e) {
@@ -190,8 +195,9 @@ async function sendSimpleMessage() {
   }
 
   function falarResposta(text) {
-    const source = text || el('[data-violeta-response]', '.mensagem-violeta:last-child', '.message.violeta:last-child');
+    const source = text || el('[data-violeta-response]', '.mensagem-violeta:last-child', '.message.violeta:last-child', '#simpleChatBox .simple-bot-msg:last-child');
     const value = source && source.textContent != null ? source.textContent : source;
+    if (root.localStorage && root.localStorage.getItem(VOICE_KEY) !== 'true') return false;
     return falarTexto(value);
   }
 
@@ -204,7 +210,11 @@ async function sendSimpleMessage() {
     const enabled = typeof force === 'boolean' ? force : !current;
     if (root.localStorage) root.localStorage.setItem(VOICE_KEY, String(enabled));
     const button = el('[data-voice-toggle]', '#toggleVoiceReply', '#voiceReplyToggle');
-    if (button) { button.setAttribute('aria-pressed', String(enabled)); button.classList.toggle('ativo', enabled); }
+    if (button) {
+      button.setAttribute('aria-pressed', String(enabled));
+      button.classList.toggle('ativo', enabled);
+      button.classList.toggle('active', enabled);
+    }
     if (enabled) falarResposta(); else pararFala();
     return enabled;
   }
@@ -219,10 +229,16 @@ async function sendSimpleMessage() {
     recognition.interimResults = false;
     recognition.onstart = function () { listening = true; atualizarMic(true); };
     recognition.onend = function () { listening = false; atualizarMic(false); };
-    recognition.onerror = function () { listening = false; atualizarMic(false); };
+    recognition.onerror = function (event) {
+      listening = false;
+      atualizarMic(false);
+      addSimpleMsg(event && event.error === 'not-allowed'
+        ? 'O acesso ao microfone foi bloqueado. Você pode digitar sua mensagem.'
+        : 'Não foi possível usar o microfone. Você pode digitar sua mensagem.', 'simple-bot-msg');
+    };
     recognition.onresult = function (event) {
       const result = event && event.results && event.results[0] && event.results[0][0];
-      const input = el('#mensagem', '#message', 'textarea[name="message"]', 'input[name="message"]', '[contenteditable="true"]');
+      const input = el('#simpleUserInput', '#mensagem', '#message', 'textarea[name="message"]', 'input[name="message"]', '[contenteditable="true"]');
       if (input && result && result.transcript) {
         if ('value' in input) input.value = result.transcript;
         else input.textContent = result.transcript;
@@ -234,15 +250,30 @@ async function sendSimpleMessage() {
 
   function atualizarMic(active) {
     const button = el('[data-mic-toggle]', '#toggleMic', '#microfone');
-    if (button) { button.setAttribute('aria-pressed', String(active)); button.classList.toggle('ativo', active); }
+    if (button) {
+      button.setAttribute('aria-pressed', String(active));
+      button.classList.toggle('ativo', active);
+      button.classList.toggle('listening', active);
+    }
   }
 
   function toggleMic() {
     const mic = getSpeechRecognition();
-    if (!mic) return false;
+    if (!mic) {
+      addSimpleMsg('Seu navegador não oferece entrada por voz. Você pode digitar sua mensagem.', 'simple-bot-msg');
+      return false;
+    }
     if (listening) pararEscuta();
-    else { try { mic.start(); } catch (_) {} }
-    return !listening;
+    else {
+      try { mic.start(); }
+      catch (error) {
+        if (root.console && typeof root.console.warn === 'function') root.console.warn('Não foi possível iniciar o reconhecimento de voz.', error);
+        addSimpleMsg('Não foi possível iniciar o microfone. Verifique a permissão do navegador ou digite sua mensagem.', 'simple-bot-msg');
+        pararEscuta();
+        return false;
+      }
+    }
+    return true;
   }
 
   function pararEscuta() {
@@ -265,21 +296,44 @@ async function sendSimpleMessage() {
     doc.documentElement.classList.toggle('menos-movimento', !!s.reducedMotion);
     doc.documentElement.classList.toggle('foco-visivel', !!s.focus);
     doc.documentElement.classList.toggle('leitura-clique', !!s.readOnClick);
+    if (doc.body) {
+      doc.body.classList.toggle('a11y-high-contrast', !!s.contrast);
+      doc.body.classList.toggle('a11y-reduce-motion', !!s.reducedMotion);
+      doc.body.classList.toggle('a11y-strong-focus', !!s.focus);
+    }
+
+    const controls = {
+      contrast: '#a11yContrast',
+      reducedMotion: '#a11yMotion',
+      focus: '#a11yFocus',
+      readOnClick: '#a11yReadAloud',
+    };
+    Object.keys(controls).forEach(function (key) {
+      const control = el(controls[key]);
+      if (control) control.checked = !!s[key];
+    });
   }
 
   function salvarA11y(settings) {
     const value = Object.assign({}, defaults, settings);
-    if (root.localStorage) root.localStorage.setItem(A11Y_KEY, JSON.stringify(value));
+    try {
+      if (root.localStorage) root.localStorage.setItem(A11Y_KEY, JSON.stringify(value));
+    } catch (error) {
+      if (root.console && typeof root.console.warn === 'function') root.console.warn('Não foi possível salvar as preferências de acessibilidade.', error);
+    }
     aplicarA11y(value);
     return value;
   }
 
   function painelAcessibilidade(force) {
-    const panel = el('[data-a11y-panel]', '#painelAcessibilidade', '#accessibilityPanel');
+    const panel = el('[data-a11y-panel]', '#painelAcessibilidade', '#accessibilityPanel', '#a11yPanel');
     if (!panel) return false;
-    const open = typeof force === 'boolean' ? force : panel.hidden;
+    const open = typeof force === 'boolean' ? force : !panel.classList.contains('open');
     panel.hidden = !open;
+    panel.classList.toggle('open', open);
     panel.setAttribute('aria-hidden', String(!open));
+    const button = el('#a11yFab');
+    if (button) button.setAttribute('aria-expanded', String(open));
     return open;
   }
 
@@ -289,16 +343,41 @@ async function sendSimpleMessage() {
     return salvarA11y(s);
   }
 
-  function resetAcessibilidade() { return salvarA11y(Object.assign({}, defaults)); }
+  function definirPreferenciaAcessibilidade(name, enabled) {
+    const allowed = ['contrast', 'reducedMotion', 'focus', 'readOnClick'];
+    if (allowed.indexOf(name) === -1) throw new Error('Preferência de acessibilidade inválida: ' + name);
+    const settings = carregarA11y();
+    settings[name] = !!enabled;
+    return salvarA11y(settings);
+  }
 
-  function saidaRapida(text) {
-    const value = texto(text || (el('#mensagem', '#message', 'textarea[name="message"]') || {}).value);
-    if (!value) return false;
-    const input = el('#mensagem', '#message', 'textarea[name="message"]', 'input[name="message"]');
-    if (input && 'value' in input) input.value = value;
-    const form = input && input.form ? input.form : el('#chat-form', 'form[data-chat-form]');
-    if (form && typeof form.requestSubmit === 'function') form.requestSubmit();
-    else if (form) form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  function resetAcessibilidade() {
+    const settings = salvarA11y(Object.assign({}, defaults));
+    const panel = el('#a11yPanel');
+    if (panel) {
+      panel.classList.remove('open');
+      panel.hidden = false;
+      panel.setAttribute('aria-hidden', 'true');
+    }
+    const button = el('#a11yFab');
+    if (button) button.setAttribute('aria-expanded', 'false');
+    return settings;
+  }
+
+  function saidaRapida() {
+    const desabafo = el('#desabafoText');
+    const alerta = el('#alertaDesc');
+    const chatInput = el('#simpleUserInput');
+    const chatBox = el('#simpleChatBox');
+    if (desabafo) desabafo.value = '';
+    if (alerta) alerta.value = '';
+    if (chatInput) chatInput.value = '';
+    if (chatBox) chatBox.replaceChildren();
+    chatSession++;
+    simpleChatHistory = [];
+    pararFala();
+    pararEscuta();
+    if (root.location) root.location.replace('https://www.google.com/search?q=clima+hoje');
     return true;
   }
 
@@ -306,8 +385,10 @@ async function sendSimpleMessage() {
     aplicarA11y(carregarA11y());
     if (!doc) return;
     doc.addEventListener('click', function (event) {
-      const target = event.target && event.target.closest ? event.target.closest('[data-read-aloud], .ler-por-clique') : null;
-      if (target && carregarA11y().readOnClick) falarTexto(target.textContent);
+      const target = event.target && event.target.closest
+        ? event.target.closest('[data-read-aloud], .ler-por-clique, .tab-pane p, .tab-pane h2, .tab-pane h3, .tab-pane li')
+        : null;
+      if (target && !target.closest('#a11yPanel, #assistantModal') && carregarA11y().readOnClick) falarTexto(target.textContent);
     });
     doc.addEventListener('keydown', function (event) {
       if (event.key !== 'Escape') return;
@@ -317,7 +398,7 @@ async function sendSimpleMessage() {
     });
   }
 
-  Object.assign(root, { A11Y_KEY, toggleVoiceReply, falarResposta, falarTexto, pararFala, getSpeechRecognition, toggleMic, pararEscuta, painelAcessibilidade, alterarFonte, aplicarA11y, resetAcessibilidade, saidaRapida });
+  Object.assign(root, { A11Y_KEY, toggleVoiceReply, falarResposta, falarTexto, pararFala, getSpeechRecognition, toggleMic, pararEscuta, painelAcessibilidade, alterarFonte, definirPreferenciaAcessibilidade, aplicarA11y, resetAcessibilidade, saidaRapida });
   if (doc) {
     if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', configurarA11y, { once: true });
     else configurarA11y();
