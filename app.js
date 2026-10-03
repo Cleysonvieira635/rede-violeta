@@ -2,9 +2,14 @@
 const TAB_MAP = { desabafo: 0, identificar: 1, quiz: 2, recursos: 3, faq: 4, alertas: 5 };
 
 /* ── Backend ── */
-const API_BASE = window.location.protocol === 'file:'
-  ? 'http://127.0.0.1:8000/api/v1'
-  : '/api/v1';
+const API_BASE = window.REDE_VIOLETA_API_BASE || (
+  window.location.hostname.endsWith('.github.io')
+    ? 'https://rede-violeta.onrender.com/api/v1'
+    : window.location.protocol === 'file:'
+      ? 'http://127.0.0.1:8000/api/v1'
+      : '/api/v1'
+);
+window.REDE_VIOLETA_API_BASE = API_BASE;
 
 async function apiFetch(path, options = {}) {
   const ctrl  = new AbortController();

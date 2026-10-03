@@ -150,10 +150,7 @@ async function sendSimpleMessage() {
   try {
     const ctrl = new AbortController();
     timer = setTimeout(() => ctrl.abort(), 20000);
-    const chatApiBase = window.location.protocol === 'file:'
-      ? 'http://127.0.0.1:8000/api/v1'
-      : '/api/v1';
-    const res = await fetch(chatApiBase + '/chat/', {
+    const res = await fetch(window.REDE_VIOLETA_API_BASE + '/chat/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       signal: ctrl.signal,
@@ -163,9 +160,7 @@ async function sendSimpleMessage() {
     const dados = await res.json();
     resposta = dados && dados.resposta ? dados.resposta : respostaLocalDeFallback(text, idioma);
   } catch (e) {
-    /* Backend indisponível (ex.: site aberto via file://, sem servidor,
-       ou falha de rede) — cai para as respostas locais por palavra-chave,
-       para que o chat continue funcional mesmo offline. */
+    /* Backend indisponível — usa respostas locais para manter o chat acessível. */
     resposta = respostaLocalDeFallback(text, idioma);
   } finally {
     clearTimeout(timer);
