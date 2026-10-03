@@ -150,218 +150,176 @@ async function sendSimpleMessage() {
 }
 /* ════════════════════════════════════════════
    🔊 Voz: ouvir respostas da Violeta
-   ════════════════════════════════════════════ */
-let vozAtivada = false;tas da Violeta
-   ════════════════════════════════════════════ */
-function toggleVoiceReply() {
-  vozAtivada = !vozAtivada;
-  const btn = document.getElementById('voiceReplyToggle');
-  btn.classList.toggle('active', vozAtivada);
-  btn.setAttribute('aria-pressed', String(vozAtivada));');
-  if (!vozAtivada) pararFala();, vozAtivada);
-} btn.setAttribute('aria-pressed', String(vozAtivada));
-  if (!vozAtivada) pararFala();
-function falarResposta(texto) {
-  if (!vozAtivada) return;
-  falarTexto(texto);ta(texto) {
-} if (!vozAtivada) return;
-  falarTexto(texto);
-function falarTexto(texto) {
-  if (!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(texto);
-  utter.lang = 'pt-BR';s.cancel();
-  utter.rate = 1;ew SpeechSynthesisUtterance(texto);
-  window.speechSynthesis.speak(utter);
-} utter.rate = 1;
-  window.speechSynthesis.speak(utter);
-function pararFala() {
-  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-}unction pararFala() {
-  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-/* ════════════════════════════════════════════
-   🎙️ Voz: falar com a Violeta (microfone)
-   ════════════════════════════════════════════ */
-let reconhecimento = null;oleta (microfone)
-let escutando = false;═════════════════════════ */
-let reconhecimento = null;
-function getSpeechRecognition() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  return SR ? new SR() : null;) {
-} const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  return SR ? new SR() : null;
-function toggleMic() {
-  if (escutando) { pararEscuta(); return; }
-  if (!reconhecimento) reconhecimento = getSpeechRecognition();
-  if (!reconhecimento) {Escuta(); return; }
-    addSimpleMsg('Seu navegador não suporta entrada por voz. Tente usar o Google Chrome ou digite sua mensagem.', 'simple-bot-msg');
-    return;nhecimento) {
-  } addSimpleMsg('Seu navegador não suporta entrada por voz. Tente usar o Google Chrome ou digite sua mensagem.', 'simple-bot-msg');
-  reconhecimento.lang = 'pt-BR';
-  reconhecimento.interimResults = false;
-  reconhecimento.maxAlternatives = 1;
-  reconhecimento.interimResults = false;
-  reconhecimento.onstart = () => { 1;
-    escutando = true;
-    document.getElementById('micBtn').classList.add('listening');
-    document.getElementById('micBtn').setAttribute('aria-pressed', 'true');
-    document.getElementById('voiceHint').style.display = 'block';
-  };document.getElementById('micBtn').setAttribute('aria-pressed', 'true');
-  reconhecimento.onresult = (event) => {.style.display = 'block';
-    const texto = event.results[0][0].transcript;
-    const inp = document.getElementById('simpleUserInput');
-    inp.value = texto;t.results[0][0].transcript;
-    sendSimpleMessage();.getElementById('simpleUserInput');
-  };inp.value = texto;
-  reconhecimento.onerror = () => { pararEscuta(); };
-  reconhecimento.onend = () => { pararEscuta(); };
-  reconhecimento.onerror = () => { pararEscuta(); };
-  try { reconhecimento.start(); } catch (e) { pararEscuta(); }
-}
-  try { reconhecimento.start(); } catch (e) { pararEscuta(); }
-function pararEscuta() {
-  escutando = false;
-  if (reconhecimento) { try { reconhecimento.stop(); } catch (e) {} }
-  const micBtn = document.getElementById('micBtn');
-  const hint = document.getElementById('voiceHint'); } catch (e) {} }
-  if (micBtn) { micBtn.classList.remove('listening'); micBtn.setAttribute('aria-pressed', 'false'); }
-  if (hint) hint.style.display = 'none';voiceHint');
-} if (micBtn) { micBtn.classList.remove('listening'); micBtn.setAttribute('aria-pressed', 'false'); }
-  if (hint) hint.style.display = 'none';
-/* ════════════════════════════════════════════
-   ♿ Acessibilidade
-   ════════════════════════════════════════════ */
-const A11Y_KEY = 'redeVioleta_a11y_prefs';
-const A11Y_FONT_STEP = 2; /* px por nível */═══ */
-const A11Y_FONT_MIN  = -2;eta_a11y_prefs';
-const A11Y_FONT_MAX  = 4; /* px por nível */
-let a11yFontLevel = 0; -2;
-const A11Y_FONT_MAX  = 4;
-function a11yLoadPrefs() {
-  let prefs = {};
-  try { prefs = JSON.parse(localStorage.getItem(A11Y_KEY) || '{}'); } catch (e) { prefs = {}; }
-  let prefs = {};
-  a11yFontLevel = Number(prefs.fontLevel) || 0;(A11Y_KEY) || '{}'); } catch (e) { prefs = {}; }
-  document.documentElement.style.fontSize = (16 + a11yFontLevel * A11Y_FONT_STEP) + 'px';
-  a11yFontLevel = Number(prefs.fontLevel) || 0;
-  document.body.classList.toggle('a11y-high-contrast', !!prefs.highContrast);TEP) + 'px';
-  document.body.classList.toggle('a11y-reduce-motion', !!prefs.reduceMotion);
-  document.body.classList.toggle('a11y-strong-focus', !!prefs.strongFocus););
-  document.body.classList.toggle('a11y-reduce-motion', !!prefs.reduceMotion);
-  const elContrast = document.getElementById('a11yContrast');.strongFocus);
-  const elMotion    = document.getElementById('a11yMotion');
-  const elFocus     = document.getElementById('a11yFocus'););
-  const elRead      = document.getElementById('a11yReadAloud');
-  if (elContrast) elContrast.checked = !!prefs.highContrast;
-  if (elMotion)   elMotion.checked   = !!prefs.reduceMotion;');
-  if (elFocus)    elFocus.checked    = !!prefs.strongFocus;;
-  if (elRead)     elRead.checked     = !!prefs.readAloud;on;
-  if (prefs.readAloud) a11yAtivarLeituraClique(true);Focus;
-} if (elRead)     elRead.checked     = !!prefs.readAloud;
-  if (prefs.readAloud) a11yAtivarLeituraClique(true);
-function a11ySavePrefs(partial) {
-  let prefs = {};
-  try { prefs = JSON.parse(localStorage.getItem(A11Y_KEY) || '{}'); } catch (e) { prefs = {}; }
-  prefs = Object.assign(prefs, partial);
-  try { localStorage.setItem(A11Y_KEY, JSON.stringify(prefs)); } catch (e) {}e) { prefs = {}; }
-} prefs = Object.assign(prefs, partial);
-  try { localStorage.setItem(A11Y_KEY, JSON.stringify(prefs)); } catch (e) {}
-function toggleA11yPanel(force) {
-  const panel = document.getElementById('a11yPanel');
-  const fab   = document.getElementById('a11yFab');
-  const abrir = typeof force === 'boolean' ? force : !panel.classList.contains('open');
-  panel.classList.toggle('open', abrir);'a11yFab');
-  fab.setAttribute('aria-expanded', String(abrir));: !panel.classList.contains('open');
-} panel.classList.toggle('open', abrir);
-window.addEventListener('click', function (e) {r));
-  const panel = document.getElementById('a11yPanel');
-  const fab   = document.getElementById('a11yFab');
-  if (panel && panel.classList.contains('open') && !panel.contains(e.target) && e.target !== fab && !fab.contains(e.target)) {
-    toggleA11yPanel(false);tElementById('a11yFab');
-  }f (panel && panel.classList.contains('open') && !panel.contains(e.target) && e.target !== fab && !fab.contains(e.target)) {
-}); toggleA11yPanel(false);
-  }
-function a11yFont(direcao) {
-  if (direcao === 0) a11yFontLevel = 0;
-  else a11yFontLevel = Math.max(A11Y_FONT_MIN, Math.min(A11Y_FONT_MAX, a11yFontLevel + direcao));
-  document.documentElement.style.fontSize = (16 + a11yFontLevel * A11Y_FONT_STEP) + 'px';
-  a11ySavePrefs({ fontLevel: a11yFontLevel }); Math.min(A11Y_FONT_MAX, a11yFontLevel + direcao));
-} document.documentElement.style.fontSize = (16 + a11yFontLevel * A11Y_FONT_STEP) + 'px';
-  a11ySavePrefs({ fontLevel: a11yFontLevel });
-function a11yToggle(className, ativo) {
-  document.body.classList.toggle(className, ativo);
-  const map = { 'a11y-high-contrast': 'highContrast', 'a11y-reduce-motion': 'reduceMotion', 'a11y-strong-focus': 'strongFocus' };
-  a11ySavePrefs({ [map[className]]: ativo });tivo);
-} const map = { 'a11y-high-contrast': 'highContrast', 'a11y-reduce-motion': 'reduceMotion', 'a11y-strong-focus': 'strongFocus' };
-  a11ySavePrefs({ [map[className]]: ativo });
-function a11yReadAloudToggle(ativo) {
-  a11ySavePrefs({ readAloud: ativo });
-  a11yAtivarLeituraClique(ativo);o) {
-} a11ySavePrefs({ readAloud: ativo });
-  a11yAtivarLeituraClique(ativo);
-let a11yLeituraHandler = null;
-function a11yAtivarLeituraClique(ativo) {
-  if (ativo && !a11yLeituraHandler) {
-    a11yLeituraHandler = function (e) { {
-      const alvo = e.target.closest('p, h1, h2, h3, li, span, button, a, label');
-      if (!alvo) return; function (e) {
-      const texto = alvo.innerText && alvo.innerText.trim();, button, a, label');
-      if (texto) falarTexto(texto);
-    };const texto = alvo.innerText && alvo.innerText.trim();
-    document.addEventListener('click', a11yLeituraHandler, true);
-  } else if (!ativo && a11yLeituraHandler) {
-    document.removeEventListener('click', a11yLeituraHandler, true);
-    a11yLeituraHandler = null;turaHandler) {
-    pararFala();oveEventListener('click', a11yLeituraHandler, true);
-  } a11yLeituraHandler = null;
-}   pararFala();
-  }
-function a11yReset() {
-  try { localStorage.removeItem(A11Y_KEY); } catch (e) {}
-  a11yAtivarLeituraClique(false);
-  document.body.classList.remove('a11y-high-contrast', 'a11y-reduce-motion', 'a11y-strong-focus');
-  document.documentElement.style.fontSize = '';
-  a11yFontLevel = 0;sList.remove('a11y-high-contrast', 'a11y-reduce-motion', 'a11y-strong-focus');
-  ['a11yContrast', 'a11yMotion', 'a11yFocus', 'a11yReadAloud'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.checked = false;, 'a11yFocus', 'a11yReadAloud'].forEach(id => {
-  });onst el = document.getElementById(id);
-}   if (el) el.checked = false;
-  });
-document.addEventListener('DOMContentLoaded', a11yLoadPrefs);
+════════════════════════════════════════════ */
+(function () {
+  'use strict';
 
-/* ════════════════════════════════════════════11yLoadPrefs);
-   ↗ Saída rápida
-   ════════════════════════════════════════════ */
-function saidaRapida() {
-  /* Nunca mantemos o desabafo ou o histórico do chat salvos no navegador,
-     mas por segurança limpamos qualquer conteúdo sensível visível antes de sair. */
-  try {nca mantemos o desabafo ou o histórico do chat salvos no navegador,
-    const desabafo = document.getElementById('desabafoText');sível antes de sair. */
-    if (desabafo) desabafo.value = '';
-    const chatBox = document.getElementById('simpleChatBox');
-    if (chatBox) chatBox.innerHTML = '';
-    const chatInput = document.getElementById('simpleUserInput');
-    if (chatInput) chatInput.value = '';
-    chatSession++;t = document.getElementById('simpleUserInput');
-    simpleChatHistory = [];t.value = '';
-    pararFala();+;
-    pararEscuta();ory = [];
-  } catch (e) {}
-  window.location.replace('https://www.google.com/search?q=clima+hoje');
-} } catch (e) {}
-  window.location.replace('https://www.google.com/search?q=clima+hoje');
-let ultimoEscape = 0;
-document.addEventListener('keydown', function (e) {
-  if (e.key !== 'Escape') return;
-  const modalAberto = document.getElementById('assistantModal') && document.getElementById('assistantModal').style.display === 'block';
-  const painelAberto = document.getElementById('a11yPanel') && document.getElementById('a11yPanel').classList.contains('open');
-  if (modalAberto) { closeAssistant(); return; }ssistantModal') && document.getElementById('assistantModal').style.display === 'block';
-  if (painelAberto) { toggleA11yPanel(false); return; }el') && document.getElementById('a11yPanel').classList.contains('open');
-  /* Segundo Escape em até 2s confirma a saída rápida */
-  const agora = Date.now();eA11yPanel(false); return; }
-  if (agora - ultimoEscape <= 2000) { ultimoEscape = 0; saidaRapida(); return; }
-  ultimoEscape = agora;w();
-});f (agora - ultimoEscape <= 2000) { ultimoEscape = 0; saidaRapida(); return; }
-  ultimoEscape = agora;
-});
+  const root = typeof window !== 'undefined' ? window : globalThis;
+  const doc = typeof document !== 'undefined' ? document : null;
+  const A11Y_KEY = 'violeta-a11y-preferencias';
+  const VOICE_KEY = 'violeta-voz-resposta';
+  const defaults = { fontSize: 100, contrast: false, reducedMotion: false, focus: false, readOnClick: false };
+  let recognition = null;
+  let listening = false;
+  let lastEscape = 0;
+  let escapeTimer = null;
+
+  function el(...selectors) {
+    if (!doc) return null;
+    for (const selector of selectors) {
+      const node = doc.querySelector(selector);
+      if (node) return node;
+    }
+    return null;
+  }
+
+  function texto(value) {
+    return String(value == null ? '' : value).replace(/\s+/g, ' ').trim();
+  }
+
+  function falarTexto(text) {
+    const value = texto(text);
+    if (!value || !root.speechSynthesis || typeof root.SpeechSynthesisUtterance !== 'function') return false;
+    pararFala();
+    const utterance = new root.SpeechSynthesisUtterance(value);
+    utterance.lang = 'pt-BR';
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    root.speechSynthesis.speak(utterance);
+    return true;
+  }
+
+  function falarResposta(text) {
+    const source = text || el('[data-violeta-response]', '.mensagem-violeta:last-child', '.message.violeta:last-child');
+    const value = source && source.textContent != null ? source.textContent : source;
+    return falarTexto(value);
+  }
+
+  function pararFala() {
+    if (root.speechSynthesis && typeof root.speechSynthesis.cancel === 'function') root.speechSynthesis.cancel();
+  }
+
+  function toggleVoiceReply(force) {
+    const current = root.localStorage ? root.localStorage.getItem(VOICE_KEY) === 'true' : false;
+    const enabled = typeof force === 'boolean' ? force : !current;
+    if (root.localStorage) root.localStorage.setItem(VOICE_KEY, String(enabled));
+    const button = el('[data-voice-toggle]', '#toggleVoiceReply', '#voiceReplyToggle');
+    if (button) { button.setAttribute('aria-pressed', String(enabled)); button.classList.toggle('ativo', enabled); }
+    if (enabled) falarResposta(); else pararFala();
+    return enabled;
+  }
+
+  function getSpeechRecognition() {
+    if (recognition) return recognition;
+    const SpeechRecognition = root.SpeechRecognition || root.webkitSpeechRecognition;
+    if (typeof SpeechRecognition !== 'function') return null;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'pt-BR';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = function () { listening = true; atualizarMic(true); };
+    recognition.onend = function () { listening = false; atualizarMic(false); };
+    recognition.onerror = function () { listening = false; atualizarMic(false); };
+    recognition.onresult = function (event) {
+      const result = event && event.results && event.results[0] && event.results[0][0];
+      const input = el('#mensagem', '#message', 'textarea[name="message"]', 'input[name="message"]', '[contenteditable="true"]');
+      if (input && result && result.transcript) {
+        if ('value' in input) input.value = result.transcript;
+        else input.textContent = result.transcript;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    };
+    return recognition;
+  }
+
+  function atualizarMic(active) {
+    const button = el('[data-mic-toggle]', '#toggleMic', '#microfone');
+    if (button) { button.setAttribute('aria-pressed', String(active)); button.classList.toggle('ativo', active); }
+  }
+
+  function toggleMic() {
+    const mic = getSpeechRecognition();
+    if (!mic) return false;
+    if (listening) pararEscuta();
+    else { try { mic.start(); } catch (_) {} }
+    return !listening;
+  }
+
+  function pararEscuta() {
+    if (recognition && listening) { try { recognition.stop(); } catch (_) {} }
+    listening = false;
+    atualizarMic(false);
+  }
+
+  function carregarA11y() {
+    try { return Object.assign({}, defaults, JSON.parse(root.localStorage && root.localStorage.getItem(A11Y_KEY) || '{}')); }
+    catch (_) { return Object.assign({}, defaults); }
+  }
+
+  function aplicarA11y(settings) {
+    if (!doc || !doc.documentElement) return;
+    const s = Object.assign({}, defaults, settings);
+    doc.documentElement.style.setProperty('--violeta-font-scale', String(Number(s.fontSize) / 100));
+    doc.documentElement.style.fontSize = String(Number(s.fontSize) || 100) + '%';
+    doc.documentElement.classList.toggle('alto-contraste', !!s.contrast);
+    doc.documentElement.classList.toggle('menos-movimento', !!s.reducedMotion);
+    doc.documentElement.classList.toggle('foco-visivel', !!s.focus);
+    doc.documentElement.classList.toggle('leitura-clique', !!s.readOnClick);
+  }
+
+  function salvarA11y(settings) {
+    const value = Object.assign({}, defaults, settings);
+    if (root.localStorage) root.localStorage.setItem(A11Y_KEY, JSON.stringify(value));
+    aplicarA11y(value);
+    return value;
+  }
+
+  function painelAcessibilidade(force) {
+    const panel = el('[data-a11y-panel]', '#painelAcessibilidade', '#accessibilityPanel');
+    if (!panel) return false;
+    const open = typeof force === 'boolean' ? force : panel.hidden;
+    panel.hidden = !open;
+    panel.setAttribute('aria-hidden', String(!open));
+    return open;
+  }
+
+  function alterarFonte(delta) {
+    const s = carregarA11y();
+    s.fontSize = Math.max(80, Math.min(150, Number(s.fontSize) + Number(delta || 0)));
+    return salvarA11y(s);
+  }
+
+  function resetAcessibilidade() { return salvarA11y(Object.assign({}, defaults)); }
+
+  function saidaRapida(text) {
+    const value = texto(text || (el('#mensagem', '#message', 'textarea[name="message"]') || {}).value);
+    if (!value) return false;
+    const input = el('#mensagem', '#message', 'textarea[name="message"]', 'input[name="message"]');
+    if (input && 'value' in input) input.value = value;
+    const form = input && input.form ? input.form : el('#chat-form', 'form[data-chat-form]');
+    if (form && typeof form.requestSubmit === 'function') form.requestSubmit();
+    else if (form) form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    return true;
+  }
+
+  function configurarA11y() {
+    aplicarA11y(carregarA11y());
+    if (!doc) return;
+    doc.addEventListener('click', function (event) {
+      const target = event.target && event.target.closest ? event.target.closest('[data-read-aloud], .ler-por-clique') : null;
+      if (target && carregarA11y().readOnClick) falarTexto(target.textContent);
+    });
+    doc.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape') return;
+      const now = Date.now();
+      if (now - lastEscape < 600) { clearTimeout(escapeTimer); lastEscape = 0; pararFala(); pararEscuta(); painelAcessibilidade(false); }
+      else { lastEscape = now; clearTimeout(escapeTimer); escapeTimer = setTimeout(function () { lastEscape = 0; }, 600); }
+    });
+  }
+
+  Object.assign(root, { A11Y_KEY, toggleVoiceReply, falarResposta, falarTexto, pararFala, getSpeechRecognition, toggleMic, pararEscuta, painelAcessibilidade, alterarFonte, aplicarA11y, resetAcessibilidade, saidaRapida });
+  if (doc) {
+    if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', configurarA11y, { once: true });
+    else configurarA11y();
+  }
+}());
