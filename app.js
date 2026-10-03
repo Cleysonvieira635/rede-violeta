@@ -7,18 +7,21 @@ const API_BASE = window.location.protocol === 'file:'
   : '/api/v1';
 
 async function apiFetch(path, options = {}) {
+  const ctrl  = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 3000);
   try {
-    const ctrl  = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 3000);
     const res = await fetch(API_BASE + path, {
       headers: { 'Content-Type': 'application/json' },
       signal: ctrl.signal,
       ...options,
     });
-    clearTimeout(timer);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.json();
-  } catch { return null; }
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 function switchTab(tab) {
@@ -79,7 +82,15 @@ async function enviarDesabafo() {
   const txt = document.getElementById('desabafoText').value.trim();
   if (!txt) { alert('Escreva algo antes de registrar seu desabafo. 💙'); return; }
 
-  apiFetch('/desabafos/', { method: 'POST', body: JSON.stringify({ texto: txt, anonimo: true }) });
+  document.getElementById('desabafoError').classList.add('is-hidden');
+  const registro = await apiFetch('/desabafos/', {
+    method: 'POST',
+    body: JSON.stringify({ texto: txt, anonimo: true }),
+  });
+  if (!registro?.id) {
+    document.getElementById('desabafoError').classList.remove('is-hidden');
+    return;
+  }
 
   const classifEl = document.getElementById('assedioClassif');
   classifEl.dataset.texto = txt;
@@ -107,6 +118,7 @@ function limparDesabafo() {
 
 function novoDesabafo() {
   document.getElementById('desabafoSuccess').style.display = 'none';
+  document.getElementById('desabafoError').classList.add('is-hidden');
   document.querySelector('#tab-desabafo .card').style.display = '';
   const classifEl = document.getElementById('assedioClassif');
   classifEl.classList.add('is-hidden');
@@ -121,6 +133,7 @@ async function formalizarDenuncia() {
   const txt = document.getElementById('assedioClassif').dataset.texto || '';
   if (!txt) return;
   const btn = document.getElementById('btnFormalizar');
+  document.getElementById('formalizarError').classList.add('is-hidden');
   btn.disabled = true;
   const result = await apiFetch('/denuncias/', {
     method: 'POST',
@@ -130,6 +143,7 @@ async function formalizarDenuncia() {
     document.getElementById('formalizarConfirm').classList.remove('is-hidden');
     btn.classList.add('is-hidden');
   } else {
+    document.getElementById('formalizarError').classList.remove('is-hidden');
     btn.disabled = false;
   }
 }

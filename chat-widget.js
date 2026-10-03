@@ -186,6 +186,17 @@ async function sendSimpleMessage() {
     return String(value == null ? '' : value).replace(/\s+/g, ' ').trim();
   }
 
+  function vozFemininaPortuguesa() {
+    if (!root.speechSynthesis || typeof root.speechSynthesis.getVoices !== 'function') return null;
+    const voices = root.speechSynthesis.getVoices();
+    const portuguesas = voices.filter(function (voice) { return /^pt([-_]|$)/i.test(voice.lang || ''); });
+    const indicadoresFemininos = /\b(female|woman|zira|luciana|francisca|maria|joana|fernanda|camila|helo[ií]sa|helena|vit[oó]ria|bruna|raquel|samantha|susan|karen|ana)\b/i;
+    return portuguesas.find(function (voice) { return indicadoresFemininos.test(voice.name || ''); })
+      || portuguesas.find(function (voice) { return /br/i.test(voice.lang || ''); })
+      || voices.find(function (voice) { return indicadoresFemininos.test(voice.name || ''); })
+      || null;
+  }
+
   function falarTexto(text) {
     const value = texto(text);
     if (!value || !root.speechSynthesis || typeof root.SpeechSynthesisUtterance !== 'function') return false;
@@ -193,7 +204,8 @@ async function sendSimpleMessage() {
     const utterance = new root.SpeechSynthesisUtterance(value);
     utterance.lang = 'pt-BR';
     utterance.rate = 1;
-    utterance.pitch = 1;
+    utterance.pitch = 1.08;
+    utterance.voice = vozFemininaPortuguesa();
     root.speechSynthesis.speak(utterance);
     return true;
   }
@@ -210,16 +222,21 @@ async function sendSimpleMessage() {
   }
 
   function toggleVoiceReply(force) {
-    const current = root.localStorage ? root.localStorage.getItem(VOICE_KEY) === 'true' : false;
+    let current = false;
+    try { current = root.localStorage && root.localStorage.getItem(VOICE_KEY) === 'true'; } catch (_) {}
     const enabled = typeof force === 'boolean' ? force : !current;
-    if (root.localStorage) root.localStorage.setItem(VOICE_KEY, String(enabled));
+    try { if (root.localStorage) root.localStorage.setItem(VOICE_KEY, String(enabled)); } catch (_) {}
     const button = el('[data-voice-toggle]', '#toggleVoiceReply', '#voiceReplyToggle');
     if (button) {
       button.setAttribute('aria-pressed', String(enabled));
       button.classList.toggle('ativo', enabled);
       button.classList.toggle('active', enabled);
+      button.setAttribute('aria-label', enabled
+        ? 'Desativar respostas faladas da Violeta'
+        : 'Ativar respostas faladas da Violeta');
+      button.title = enabled ? 'Desativar respostas em voz alta' : 'Ouvir respostas em voz alta';
     }
-    if (enabled) falarResposta(); else pararFala();
+    if (!enabled) pararFala();
     return enabled;
   }
 
@@ -247,6 +264,7 @@ async function sendSimpleMessage() {
         if ('value' in input) input.value = result.transcript;
         else input.textContent = result.transcript;
         input.dispatchEvent(new Event('input', { bubbles: true }));
+        if (input.id === 'simpleUserInput') sendSimpleMessage();
       }
     };
     return recognition;
@@ -269,6 +287,7 @@ async function sendSimpleMessage() {
     }
     if (listening) pararEscuta();
     else {
+      toggleVoiceReply(true);
       try { mic.start(); }
       catch (error) {
         if (root.console && typeof root.console.warn === 'function') root.console.warn('Não foi possível iniciar o reconhecimento de voz.', error);
@@ -388,6 +407,9 @@ async function sendSimpleMessage() {
   function configurarA11y() {
     aplicarA11y(carregarA11y());
     if (!doc) return;
+    let voiceEnabled = false;
+    try { voiceEnabled = root.localStorage && root.localStorage.getItem(VOICE_KEY) === 'true'; } catch (_) {}
+    toggleVoiceReply(voiceEnabled);
     doc.addEventListener('click', function (event) {
       const target = event.target && event.target.closest
         ? event.target.closest('[data-read-aloud], .ler-por-clique, .tab-pane p, .tab-pane h2, .tab-pane h3, .tab-pane li')
