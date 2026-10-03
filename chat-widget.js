@@ -1,6 +1,5 @@
 /* ── Mensagem rotativa ── */
 const comfortMessages = [
-  "Sessão do chat e confirmação da saída rápida",
   "Você merece viver com paz, respeito, segurança e liberdade.",
   "Buscar ajuda não é sinal de fraqueza. É um passo de proteção.",
   "Você não precisa enfrentar uma situação de violência sozinha.",
@@ -65,8 +64,32 @@ function addSimpleMsg(text, cls) {
   box.scrollTop = box.scrollHeight;
 }
 
-function respostaLocalDeFallback(text) {
+function respostaLocalDeFallback(text, language) {
   const q = (text || '').toLowerCase();
+  const idioma = language || (typeof getSiteLanguage === 'function' ? getSiteLanguage() : 'pt');
+  if (idioma === 'en') {
+    if (/danger|help|threat|attack|hurt/.test(q)) return 'If you are in immediate danger, prioritize your safety. If you can, move to a safe place and call 190. The 180 hotline also provides guidance and information about support services.';
+    if (/180|report|complaint|guidance/.test(q)) return 'The 180 hotline is Brazil’s Women’s Support Center. It is free and operates 24 hours a day, providing guidance on rights and support services.';
+    if (/police station|deam/.test(q)) return 'A DEAM is a specialized police station for women. Open the Resources tab to find more information about specialized support services.';
+    if (/violence|abuse|harassment/.test(q)) return 'Violence against women can be physical, psychological, sexual, financial, or moral. If this is happening to you, contact someone you trust or a specialized support service.';
+    if (/afraid|fear|alone|sad|anxious/.test(q)) return 'I am sorry you are going through this. You deserve to be heard and respected. If it is safe, talk to someone you trust. In an emergency, call 190.';
+    if (/case|angela|daniella|eloa|eliza|mercia/.test(q)) return 'The “Learn about the Cases” tab presents historical cases for educational purposes: Ângela Diniz, Daniella Perez, Eloá Pimentel, Eliza Samudio, and Mércia Nakashima.';
+    if (/law|maria da penha|right/.test(q)) return 'Brazil has specific legislation to protect women, including the Maria da Penha Law. For legal guidance, contact the Public Defender’s Office or a specialized legal service.';
+    if (/site|rede violeta|project/.test(q)) return 'Rede Violeta is an academic project by Faculdade Cruzeiro do Sul. It brings together information, awareness, and support options related to violence against women.';
+    return 'I can help with information about Rede Violeta resources, emergency contacts, historical cases, or ways to seek support. I am Violeta! 💜';
+  }
+  if (idioma === 'es') {
+    if (/peligro|ayuda|amenaz|agred|violencia/.test(q)) return 'Si estás en peligro inmediato, prioriza tu seguridad. Si puedes, ve a un lugar seguro y llama al 190. La línea 180 también ofrece orientación e información sobre la red de atención.';
+    if (/180|denuncia|orienta/.test(q)) return 'La línea 180 es el Centro de Atención a las Mujeres de Brasil. Es gratuita y funciona las 24 horas. Ofrece orientación sobre derechos y servicios de apoyo.';
+    if (/comisaría|policia|deam/.test(q)) return 'La DEAM es una comisaría especializada en la atención a las mujeres. Consulta la pestaña Recursos para obtener más información sobre los servicios especializados.';
+    if (/acoso|violencia|abuso/.test(q)) return 'La violencia contra las mujeres puede ser física, psicológica, sexual, patrimonial o moral. Si estás viviendo esta situación, busca a alguien de confianza o un servicio especializado.';
+    if (/miedo|sola|triste|ansio/.test(q)) return 'Siento mucho que estés pasando por esto. Mereces que te escuchen y te respeten. Si es seguro, habla con alguien de confianza. En una emergencia, llama al 190.';
+    if (/caso|angela|daniella|eloa|eliza|mercia/.test(q)) return 'La pestaña “Conoce los casos” presenta casos históricos con fines educativos: Ângela Diniz, Daniella Perez, Eloá Pimentel, Eliza Samudio y Mércia Nakashima.';
+    if (/ley|maria da penha|derecho/.test(q)) return 'Brasil cuenta con legislación específica para proteger a las mujeres, incluida la Ley Maria da Penha. Para recibir orientación jurídica, contacta con la Defensoría Pública o un servicio especializado.';
+    if (/sitio|rede violeta|proyecto/.test(q)) return 'Rede Violeta es un proyecto académico de la Faculdade Cruzeiro do Sul. Reúne información, concienciación y opciones de apoyo frente a la violencia contra las mujeres.';
+    return 'Puedo ayudarte con información sobre los recursos de Rede Violeta, teléfonos de emergencia, casos históricos o formas de buscar apoyo. ¡Soy Violeta! 💜';
+  }
+
   let r = 'Posso ajudar com informações sobre os recursos da Rede Violeta, canais de emergência, casos históricos ou formas de buscar apoio. Sou a Violeta! 💜';
 
   if (q.includes('perigo') || q.includes('socorro') || q.includes('amea') || q.includes('agredindo') || q.includes('agress')) {
@@ -120,6 +143,7 @@ async function sendSimpleMessage() {
 
   const sessao = chatSession;
   const historicoEnviado = simpleChatHistory.slice();
+  const idioma = typeof getSiteLanguage === 'function' ? getSiteLanguage() : 'pt';
   let resposta = '';
   let timer;
 
@@ -133,16 +157,16 @@ async function sendSimpleMessage() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       signal: ctrl.signal,
-      body: JSON.stringify({ mensagem: text, historico: historicoEnviado })
+      body: JSON.stringify({ mensagem: text, historico: historicoEnviado, idioma })
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const dados = await res.json();
-    resposta = dados && dados.resposta ? dados.resposta : respostaLocalDeFallback(text);
+    resposta = dados && dados.resposta ? dados.resposta : respostaLocalDeFallback(text, idioma);
   } catch (e) {
     /* Backend indisponível (ex.: site aberto via file://, sem servidor,
        ou falha de rede) — cai para as respostas locais por palavra-chave,
        para que o chat continue funcional mesmo offline. */
-    resposta = respostaLocalDeFallback(text);
+    resposta = respostaLocalDeFallback(text, idioma);
   } finally {
     clearTimeout(timer);
   }
@@ -186,13 +210,19 @@ async function sendSimpleMessage() {
     return String(value == null ? '' : value).replace(/\s+/g, ' ').trim();
   }
 
-  function vozFemininaPortuguesa() {
+  function idiomaAtual() {
+    const language = typeof root.getSiteLanguage === 'function' ? root.getSiteLanguage() : 'pt';
+    return language === 'en' ? 'en-US' : language === 'es' ? 'es-ES' : 'pt-BR';
+  }
+
+  function vozFeminina() {
     if (!root.speechSynthesis || typeof root.speechSynthesis.getVoices !== 'function') return null;
     const voices = root.speechSynthesis.getVoices();
-    const portuguesas = voices.filter(function (voice) { return /^pt([-_]|$)/i.test(voice.lang || ''); });
-    const indicadoresFemininos = /\b(female|woman|zira|luciana|francisca|maria|joana|fernanda|camila|helo[ií]sa|helena|vit[oó]ria|bruna|raquel|samantha|susan|karen|ana)\b/i;
-    return portuguesas.find(function (voice) { return indicadoresFemininos.test(voice.name || ''); })
-      || portuguesas.find(function (voice) { return /br/i.test(voice.lang || ''); })
+    const language = idiomaAtual().split('-')[0];
+    const languageVoices = voices.filter(function (voice) { return new RegExp('^' + language + '([-_]|$)', 'i').test(voice.lang || ''); });
+    const indicadoresFemininos = /\b(female|woman|zira|luciana|francisca|maria|joana|fernanda|camila|helo[ií]sa|helena|vit[oó]ria|bruna|raquel|samantha|susan|karen|ana|aria|jenny|michelle|sara|paulina|monica|elena|laura|sofia|sabina|isabela)\b/i;
+    return languageVoices.find(function (voice) { return indicadoresFemininos.test(voice.name || ''); })
+      || languageVoices.find(function (voice) { return new RegExp(idiomaAtual().split('-')[1], 'i').test(voice.lang || ''); })
       || voices.find(function (voice) { return indicadoresFemininos.test(voice.name || ''); })
       || null;
   }
@@ -202,10 +232,10 @@ async function sendSimpleMessage() {
     if (!value || !root.speechSynthesis || typeof root.SpeechSynthesisUtterance !== 'function') return false;
     pararFala();
     const utterance = new root.SpeechSynthesisUtterance(value);
-    utterance.lang = 'pt-BR';
+    utterance.lang = idiomaAtual();
     utterance.rate = 1;
     utterance.pitch = 1.08;
-    utterance.voice = vozFemininaPortuguesa();
+    utterance.voice = vozFeminina();
     root.speechSynthesis.speak(utterance);
     return true;
   }
@@ -245,7 +275,7 @@ async function sendSimpleMessage() {
     const SpeechRecognition = root.SpeechRecognition || root.webkitSpeechRecognition;
     if (typeof SpeechRecognition !== 'function') return null;
     recognition = new SpeechRecognition();
-    recognition.lang = 'pt-BR';
+    recognition.lang = idiomaAtual();
     recognition.continuous = false;
     recognition.interimResults = false;
     recognition.onstart = function () { listening = true; atualizarMic(true); };
@@ -288,6 +318,7 @@ async function sendSimpleMessage() {
     if (listening) pararEscuta();
     else {
       toggleVoiceReply(true);
+      mic.lang = idiomaAtual();
       try { mic.start(); }
       catch (error) {
         if (root.console && typeof root.console.warn === 'function') root.console.warn('Não foi possível iniciar o reconhecimento de voz.', error);

@@ -16,11 +16,16 @@ async def conversar_com_violeta(dados: ChatRequest):
     """
     texto = dados.mensagem.strip()
     if not texto:
+        mensagens_vazias = {
+            "pt": "Pode escrever ou falar à vontade — estou aqui para ouvir. 💜",
+            "en": "You can type or speak freely — I’m here to listen. 💜",
+            "es": "Puedes escribir o hablar con libertad — estoy aquí para escucharte. 💜",
+        }
         return ChatResponse(
-            resposta="Pode escrever ou falar à vontade — estou aqui para ouvir. 💜",
+            resposta=mensagens_vazias[dados.idioma],
             fonte="regras",
             alerta_seguranca=False,
         )
 
-    resposta, fonte, alerta = await responder(texto, dados.historico)
+    resposta, fonte, alerta = await responder(texto, dados.historico, dados.idioma)
     return ChatResponse(resposta=resposta, fonte=fonte, alerta_seguranca=alerta)

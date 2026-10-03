@@ -124,6 +124,8 @@ class ChatMensagem(BaseModel):
 class ChatRequest(BaseModel):
     mensagem: str
     historico: List[ChatMensagem] = []
+    idioma: Literal["pt", "en", "es"] = "pt"
+    idioma: Literal["pt", "en", "es"] = "pt"
 
 
 class ChatResponse(BaseModel):

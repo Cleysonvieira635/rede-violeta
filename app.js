@@ -55,6 +55,10 @@ function updateCharCount(el, countId, max) {
   document.getElementById(countId).textContent = el.value.length;
 }
 
+function textoNoIdioma(texto) {
+  return typeof window.translateSiteText === 'function' ? window.translateSiteText(texto) : texto;
+}
+
 /* ── Mood ── */
 const moodMessages = {
   'triste':           'É normal sentir tristeza. Permita-se sentir, mas lembre-se de buscar apoio. Você não está sozinha/o.',
@@ -73,14 +77,14 @@ document.getElementById('moodRow').addEventListener('click', e => {
   btn.classList.add('selected');
   const mood = btn.dataset.mood;
   const fb = document.getElementById('moodFeedback');
-  document.getElementById('moodFeedbackText').textContent = moodMessages[mood] || '';
+  document.getElementById('moodFeedbackText').textContent = textoNoIdioma(moodMessages[mood] || '');
   fb.style.display = 'flex';
 });
 
 /* ── Desabafo ── */
 async function enviarDesabafo() {
   const txt = document.getElementById('desabafoText').value.trim();
-  if (!txt) { alert('Escreva algo antes de registrar seu desabafo. 💙'); return; }
+  if (!txt) { alert(textoNoIdioma('Escreva algo antes de registrar seu desabafo. 💙')); return; }
 
   document.getElementById('desabafoError').classList.add('is-hidden');
   const registro = await apiFetch('/desabafos/', {
@@ -158,7 +162,7 @@ function quizNav(dir) {
   const radios    = document.querySelectorAll(`input[name="q${qCurrent}"]`);
   const answered  = Array.from(radios).some(r => r.checked);
 
-  if (dir === 1 && !answered) { alert('Selecione uma opção antes de avançar.'); return; }
+  if (dir === 1 && !answered) { alert(textoNoIdioma('Selecione uma opção antes de avançar.')); return; }
 
   if (dir === 1) {
     const val = parseInt(document.querySelector(`input[name="q${qCurrent}"]:checked`).value);
@@ -175,12 +179,18 @@ function quizNav(dir) {
   }
 
   questions[qCurrent].style.display = 'block';
-  document.getElementById('qProgressLabel').textContent = `Pergunta ${qCurrent + 1} de ${qTotal}`;
+  const language = typeof window.getSiteLanguage === 'function' ? window.getSiteLanguage() : 'pt';
+  const progressLabel = language === 'en'
+    ? `Question ${qCurrent + 1} of ${qTotal}`
+    : language === 'es'
+      ? `Pregunta ${qCurrent + 1} de ${qTotal}`
+      : `Pergunta ${qCurrent + 1} de ${qTotal}`;
+  document.getElementById('qProgressLabel').textContent = progressLabel;
   const pct = Math.round((qCurrent / qTotal) * 100);
   document.getElementById('qProgressPct').textContent = pct + '%';
   document.getElementById('qProgressBar').style.width = pct + '%';
   document.getElementById('qBtnBack').style.visibility = qCurrent === 0 ? 'hidden' : 'visible';
-  document.getElementById('qBtnNext').textContent = qCurrent === qTotal - 1 ? 'Ver Resultado ✓' : 'Próxima →';
+  document.getElementById('qBtnNext').textContent = textoNoIdioma(qCurrent === qTotal - 1 ? 'Ver Resultado ✓' : 'Próxima →');
 }
 
 function mostrarResultadoQuiz() {
@@ -199,20 +209,20 @@ function mostrarResultadoQuiz() {
   if (total <= 3) {
     circle.className = 'result-circle result-ok';
     circle.textContent = '✅';
-    title.textContent = 'Situação aparentemente segura';
-    desc.textContent = 'Suas respostas não indicam sinais fortes de assédio no momento. Continue atenta/o e lembre-se: qualquer desconforto merece atenção. Fique segura/o e cuide-se!';
+    title.textContent = textoNoIdioma('Situação aparentemente segura');
+    desc.textContent = textoNoIdioma('Suas respostas não indicam sinais fortes de assédio no momento. Continue atenta/o e lembre-se: qualquer desconforto merece atenção. Fique segura/o e cuide-se!');
     alerta.style.display = 'none';
   } else if (total <= 9) {
     circle.className = 'result-circle result-atencao';
     circle.textContent = '⚠️';
-    title.textContent = 'Sinal de atenção — fique alerta';
-    desc.textContent = 'Suas respostas indicam situações que merecem atenção. Algumas experiências que você relatou podem configurar assédio. Conversar com alguém de confiança ou um profissional pode ajudar a esclarecer a situação.';
+    title.textContent = textoNoIdioma('Sinal de atenção — fique alerta');
+    desc.textContent = textoNoIdioma('Suas respostas indicam situações que merecem atenção. Algumas experiências que você relatou podem configurar assédio. Conversar com alguém de confiança ou um profissional pode ajudar a esclarecer a situação.');
     alerta.style.display = 'none';
   } else {
     circle.className = 'result-circle result-alerta';
     circle.textContent = '🆘';
-    title.textContent = 'Indicadores de assédio ou violência';
-    desc.textContent = 'Suas respostas indicam que você pode estar em situação de assédio ou violência. Você não está sozinha/o e há apoio disponível. Busque ajuda agora — use os canais abaixo ou a aba Fazer Denúncia.';
+    title.textContent = textoNoIdioma('Indicadores de assédio ou violência');
+    desc.textContent = textoNoIdioma('Suas respostas indicam que você pode estar em situação de assédio ou violência. Você não está sozinha/o e há apoio disponível. Busque ajuda agora — use os canais abaixo ou a aba Fazer Denúncia.');
     alerta.style.display = 'flex';
   }
 
@@ -230,11 +240,14 @@ function resetQuiz() {
   document.getElementById('quizResult').style.display = 'none';
   document.getElementById('quizQuestions').style.display = '';
   document.getElementById('quizNav').style.display = '';
-  document.getElementById('qProgressLabel').textContent = 'Pergunta 1 de 8';
+  const language = typeof window.getSiteLanguage === 'function' ? window.getSiteLanguage() : 'pt';
+  document.getElementById('qProgressLabel').textContent = language === 'en'
+    ? 'Question 1 of 8'
+    : language === 'es' ? 'Pregunta 1 de 8' : 'Pergunta 1 de 8';
   document.getElementById('qProgressPct').textContent = '0%';
   document.getElementById('qProgressBar').style.width = '0%';
   document.getElementById('qBtnBack').style.visibility = 'hidden';
-  document.getElementById('qBtnNext').textContent = 'Próxima →';
+  document.getElementById('qBtnNext').textContent = textoNoIdioma('Próxima →');
 }
 
 /* ── FAQ Search ── */
@@ -302,7 +315,11 @@ function timeAgo(ts) {
   return `${Math.floor(h / 24)}d atrás`;
 }
 
-const urgenciaLabel = { alta: 'Alta', media: 'Média', baixa: 'Baixa' };
+const urgenciaLabel = {
+  alta: textoNoIdioma('Alta'),
+  media: textoNoIdioma('Média'),
+  baixa: textoNoIdioma('Baixa')
+};
 const urgenciaClass = { alta: 'urgencia-tag-alta', media: 'urgencia-tag-media', baixa: 'urgencia-tag-baixa' };
 
 let filtroAtivo = 'todos';
@@ -321,7 +338,7 @@ function _paintFeed(lista) {
   feed.innerHTML = filtrados.map(a => `
     <div class="alerta-card urgencia-borda-${a.urgencia}">
       <div class="alerta-header">
-        <span class="alerta-tipo">${a.tipo}</span>
+        <span class="alerta-tipo">${textoNoIdioma(a.tipo)}</span>
         <span class="urgencia-tag ${urgenciaClass[a.urgencia]}">
           <i class="fa-solid fa-circle"></i> ${urgenciaLabel[a.urgencia]}
         </span>

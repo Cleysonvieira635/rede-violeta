@@ -46,8 +46,8 @@ SYSTEM_PROMPT = (
     "a importância de buscar um local seguro e ligar 190, antes de "
     "qualquer outra orientação.\n"
     "- Nunca minimize, julgue ou duvide do relato da pessoa.\n"
-    "- Responda em português do Brasil, em tom acolhedor, claro e "
-    "objetivo (no máximo 4-5 frases por resposta)."
+    "- Responda no idioma solicitado pela pessoa, em tom acolhedor, claro "
+    "e objetivo (no máximo 4-5 frases por resposta)."
 )
 
 AVISO_SEGURANCA = (
@@ -64,6 +64,9 @@ _TERMOS_PERIGO = (
     "ela ta aqui", "ela está aqui", "vou morrer", "ameaça de morte",
     "ameacando", "ameaçando", "arma", "agredindo", "me machucou",
     "me machucando", "nao consigo sair", "não consigo sair", "trancad",
+    "danger", "help me now", "he is here", "she is here", "i am being hurt",
+    "i can't leave", "immediate danger", "peligro", "auxilio", "ayuda ahora",
+    "no puedo salir", "me está golpeando", "me esta golpeando",
 )
 
 _RESPOSTA_PADRAO = (
@@ -105,26 +108,74 @@ def contem_sinal_de_perigo(texto: str) -> bool:
     return any(termo in t for termo in _TERMOS_PERIGO)
 
 
-def resposta_local(texto: str) -> str:
+def aviso_seguranca_idioma(idioma: str) -> str:
+    if idioma == "en":
+        return (
+            "⚠️ If you are in immediate danger, prioritize your safety now: "
+            "if possible, move to a safe place and call 190 (Military Police). "
+            "The 180 hotline also provides free, 24-hour guidance about support "
+            "services. I provide information and support, but I am not an emergency service."
+        )
+    if idioma == "es":
+        return (
+            "⚠️ Si estás en peligro inmediato, prioriza tu seguridad: si puedes, "
+            "ve a un lugar seguro y llama al 190 (Policía Militar). La línea 180 "
+            "también ofrece orientación gratuita las 24 horas sobre servicios de "
+            "apoyo. Soy una asistente informativa, no un servicio de emergencia."
+        )
+    return AVISO_SEGURANCA
+
+
+def resposta_local(texto: str, idioma: str = "pt") -> str:
     """Respostas locais, baseadas em palavras-chave — usadas quando a IA
     generativa não está configurada ou falha."""
     t = texto.lower()
+    if idioma == "en":
+        if any(term in t for term in ("180", "report", "complaint", "guidance")):
+            return "The 180 hotline is Brazil’s Women’s Support Center. It is free and operates 24 hours a day, providing guidance on rights and support services."
+        if any(term in t for term in ("police station", "deam")):
+            return "A DEAM is a specialized police station for women. Open the Resources tab to find more information about specialized support services."
+        if any(term in t for term in ("violence", "abuse", "harassment")):
+            return "Violence against women can be physical, psychological, sexual, financial, or moral. If this is happening to you, contact someone you trust or a specialized support service."
+        if any(term in t for term in ("afraid", "fear", "alone", "sad", "anxious")):
+            return "I am sorry you are going through this. You deserve to be heard and respected. If it is safe, talk to someone you trust. In an emergency, call 190."
+        if any(term in t for term in ("law", "maria da penha", "right")):
+            return "Brazil has specific legislation to protect women, including the Maria da Penha Law. For legal guidance, contact the Public Defender’s Office or a specialized legal service."
+        return "I can help with information about Rede Violeta resources, emergency contacts, types of violence, or ways to seek support. I am Violeta! 💜"
+    if idioma == "es":
+        if any(term in t for term in ("180", "denuncia", "orienta")):
+            return "La línea 180 es el Centro de Atención a las Mujeres de Brasil. Es gratuita y funciona las 24 horas. Ofrece orientación sobre derechos y servicios de apoyo."
+        if any(term in t for term in ("comisaría", "policia", "deam")):
+            return "La DEAM es una comisaría especializada en la atención a las mujeres. Consulta la pestaña Recursos para obtener más información sobre los servicios especializados."
+        if any(term in t for term in ("violencia", "acoso", "abuso")):
+            return "La violencia contra las mujeres puede ser física, psicológica, sexual, patrimonial o moral. Si estás viviendo esta situación, busca a alguien de confianza o un servicio especializado."
+        if any(term in t for term in ("miedo", "sola", "triste", "ansio")):
+            return "Siento mucho que estés pasando por esto. Mereces que te escuchen y te respeten. Si es seguro, habla con alguien de confianza. En una emergencia, llama al 190."
+        if any(term in t for term in ("ley", "maria da penha", "derecho")):
+            return "Brasil cuenta con legislación específica para proteger a las mujeres, incluida la Ley Maria da Penha. Para recibir orientación jurídica, contacta con la Defensoría Pública o un servicio especializado."
+        return "Puedo ayudarte con información sobre los recursos de Rede Violeta, teléfonos de emergencia, tipos de violencia o formas de buscar apoyo. ¡Soy Violeta! 💜"
     for termos, resposta in _REGRAS:
         if any(termo in t for termo in termos):
             return resposta
     return _RESPOSTA_PADRAO
 
 
-async def gerar_resposta_ia(mensagem: str, historico: list[ChatMensagem]) -> str | None:
+async def gerar_resposta_ia(mensagem: str, historico: list[ChatMensagem], idioma: str = "pt") -> str | None:
     """Chama um provedor de IA compatível com a API da OpenAI.
     Retorna None se a IA não estiver configurada ou a chamada falhar,
     para que o chamador use o fallback local."""
     if not settings.ai_enabled:
         return None
 
-    mensagens: list[dict[str, str]] = [
-        {"role": "system", "content": SYSTEM_PROMPT}
-    ]
+    instrucoes_idioma = {
+        "pt": "Responda em português do Brasil.",
+        "en": "Respond in English.",
+        "es": "Responde en español.",
+    }
+    mensagens: list[dict[str, str]] = [{
+        "role": "system",
+        "content": SYSTEM_PROMPT + "\n\n" + instrucoes_idioma.get(idioma, instrucoes_idioma["pt"]),
+    }]
     for item in historico[-8:]:
         mensagens.append({"role": item.role, "content": item.content})
     mensagens.append({"role": "user", "content": mensagem})
@@ -157,14 +208,14 @@ async def gerar_resposta_ia(mensagem: str, historico: list[ChatMensagem]) -> str
         return None
 
 
-async def responder(mensagem: str, historico: list[ChatMensagem]) -> tuple[str, str, bool]:
+async def responder(mensagem: str, historico: list[ChatMensagem], idioma: str = "pt") -> tuple[str, str, bool]:
     """Retorna (resposta, fonte, alerta_seguranca).
     `fonte` é "seguranca", "ia" ou "regras"."""
     if contem_sinal_de_perigo(mensagem):
-        return AVISO_SEGURANCA, "seguranca", True
+        return aviso_seguranca_idioma(idioma), "seguranca", True
 
-    resposta_gerada = await gerar_resposta_ia(mensagem, historico)
+    resposta_gerada = await gerar_resposta_ia(mensagem, historico, idioma)
     if resposta_gerada:
         return resposta_gerada, "ia", False
 
-    return resposta_local(mensagem), "regras", False
+    return resposta_local(mensagem, idioma), "regras", False

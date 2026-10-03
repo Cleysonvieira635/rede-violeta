@@ -11,6 +11,19 @@
 </head>
 <body>
 
+<section class="language-gate" id="languageGate" role="dialog" aria-modal="true" aria-labelledby="languageGateTitle">
+  <div class="language-gate-card">
+    <div class="language-gate-icon" aria-hidden="true">🌐</div>
+    <h1 id="languageGateTitle">Escolha seu idioma</h1>
+    <p>Você pode mudar essa opção depois.</p>
+    <div class="language-options">
+      <button type="button" onclick="setSiteLanguage('pt')"><span>🇧🇷</span> Português</button>
+      <button type="button" onclick="setSiteLanguage('en')"><span>🇺🇸</span> English</button>
+      <button type="button" onclick="setSiteLanguage('es')"><span>🇪🇸</span> Español</button>
+    </div>
+  </div>
+</section>
+
 <!-- ─── Saída rápida ─── -->
 <button class="quick-exit-btn" id="quickExitBtn" onclick="saidaRapida()" aria-label="Sair rapidamente deste site e ir para uma página neutra">
   <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Saída rápida
@@ -86,6 +99,7 @@
 <header>
   <div class="header-ribbon"></div>
   <div class="header-inner">
+    <button type="button" class="language-change-btn" onclick="showLanguagePicker()" aria-label="Mudar idioma">🌐 <span data-i18n="language-button">Idioma</span></button>
     <div class="header-campaign"><i class="fa-solid fa-ribbon dot-spin"></i> Agosto Lilás 2026</div>
     <img src="img/img.jpeg" alt="Rede Violeta" class="header-logo" />
     <h1>Rede Violeta</h1>
@@ -775,7 +789,7 @@
       <h2><i class="fa-solid fa-bell"></i> Criar Alerta de Abuso</h2>
       <p>Registre uma situação de risco para alertar outras pessoas. Não inclua dados pessoais de vítimas.</p>
       <form id="alertaForm" onsubmit="criarAlerta(event)" novalidate>
-        <div class="form-group"><label for="alertaTipo">Tipo de abuso <span class="req">*</span></label><select id="alertaTipo"><option value="">Selecione...</option><option>Assédio Sexual</option><option>Assédio Moral</option><option>Assédio Virtual / Cyberbullying</option><option>Violência Doméstica</option><option>Perseguição (Stalking)</option><option>Importunação Sexual</option><option>Violência Física</option><option>Outro</option></select></div>
+        <div class="form-group"><label for="alertaTipo">Tipo de abuso <span class="req">*</span></label><select id="alertaTipo"><option value="">Selecione...</option><option value="Assédio Sexual">Assédio Sexual</option><option value="Assédio Moral">Assédio Moral</option><option value="Assédio Virtual / Cyberbullying">Assédio Virtual / Cyberbullying</option><option value="Violência Doméstica">Violência Doméstica</option><option value="Perseguição (Stalking)">Perseguição (Stalking)</option><option value="Importunação Sexual">Importunação Sexual</option><option value="Violência Física">Violência Física</option><option value="Outro">Outro</option></select></div>
         <div class="form-row"><div class="form-group"><label for="alertaCidade">Cidade <span class="req">*</span></label><input type="text" id="alertaCidade" placeholder="Ex.: São Paulo" /></div><div class="form-group"><label for="alertaEstado">Estado <span class="req">*</span></label><select id="alertaEstado"><option value="">UF</option><option>AC</option><option>AL</option><option>AM</option><option>AP</option><option>BA</option><option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option><option>MG</option><option>MS</option><option>MT</option><option>PA</option><option>PB</option><option>PE</option><option>PI</option><option>PR</option><option>RJ</option><option>RN</option><option>RO</option><option>RR</option><option>RS</option><option>SC</option><option>SE</option><option>SP</option><option>TO</option></select></div></div>
         <div class="form-group"><label for="alertaLocal">Local específico (opcional)</label><input type="text" id="alertaLocal" placeholder="Ex.: Estação Sé, Metrô Linha 3" /></div>
         <div class="form-group"><label for="alertaDesc">Descreva a situação <span class="req">*</span></label><textarea id="alertaDesc" oninput="updateCharCount(this,'alertaCount',500)" maxlength="500" placeholder="O que está acontecendo? Evite nomes de vítimas."></textarea><div class="char-count"><span id="alertaCount">0</span>/500 caracteres</div></div>
@@ -810,6 +824,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 <script src="app.js"></script>
+<script src="language.js"></script>
 
 <!-- Assistente Virtual — Violeta -->
 <div class="simple-modal" id="assistantModal">
@@ -964,7 +979,11 @@ async function sendSimpleMessage() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       signal: ctrl.signal,
-      body: JSON.stringify({ mensagem: text, historico: simpleChatHistory }),
+      body: JSON.stringify({
+        mensagem: text,
+        historico: simpleChatHistory,
+        idioma: typeof getSiteLanguage === 'function' ? getSiteLanguage() : 'pt'
+      }),
     });
     clearTimeout(timer);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -993,10 +1012,25 @@ let vozAtivada = false;
 
 function toggleVoiceReply() {
   vozAtivada = !vozAtivada;
+  try { localStorage.setItem('violeta-voz-resposta', String(vozAtivada)); } catch (error) {
+    console.warn('Não foi possível salvar a preferência de voz.', error);
+  }
   const btn = document.getElementById('voiceReplyToggle');
   btn.classList.toggle('active', vozAtivada);
   btn.setAttribute('aria-pressed', String(vozAtivada));
   if (!vozAtivada) pararFala();
+}
+
+function escolherVozFeminina(idioma) {
+  if (!('speechSynthesis' in window)) return null;
+  const vozes = window.speechSynthesis.getVoices();
+  const idiomaBase = idioma.split('-')[0];
+  const vozesIdioma = vozes.filter(voz => voz.lang.toLowerCase().startsWith(idiomaBase));
+  const nomesFemininos = /\b(female|woman|zira|luciana|francisca|maria|joana|fernanda|camila|helo[ií]sa|helena|vit[oó]ria|bruna|raquel|samantha|susan|karen|ana|aria|jenny|michelle|sara|paulina|monica|elena|laura|sofia|sabina|isabela)\b/i;
+  return vozesIdioma.find(voz => nomesFemininos.test(voz.name))
+    || vozesIdioma.find(voz => new RegExp(idioma.split('-')[1] || '^$', 'i').test(voz.lang))
+    || vozes.find(voz => nomesFemininos.test(voz.name))
+    || null;
 }
 
 function falarResposta(texto) {
@@ -1008,10 +1042,24 @@ function falarTexto(texto) {
   if (!('speechSynthesis' in window)) return;
   window.speechSynthesis.cancel();
   const utter = new SpeechSynthesisUtterance(texto);
-  utter.lang = 'pt-BR';
+  const idioma = typeof getSiteLanguage === 'function' ? getSiteLanguage() : 'pt';
+  utter.lang = idioma === 'pt' ? 'pt-BR' : idioma;
+  utter.voice = escolherVozFeminina(utter.lang);
   utter.rate = 1;
+  utter.pitch = 1.08;
   window.speechSynthesis.speak(utter);
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  try { vozAtivada = localStorage.getItem('violeta-voz-resposta') === 'true'; } catch (error) {
+    console.warn('Não foi possível ler a preferência de voz.', error);
+  }
+  const btn = document.getElementById('voiceReplyToggle');
+  if (btn) {
+    btn.classList.toggle('active', vozAtivada);
+    btn.setAttribute('aria-pressed', String(vozAtivada));
+  }
+});
 
 function pararFala() {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
@@ -1035,7 +1083,17 @@ function toggleMic() {
     addSimpleMsg('Seu navegador não suporta entrada por voz. Tente usar o Google Chrome ou digite sua mensagem.', 'simple-bot-msg');
     return;
   }
-  reconhecimento.lang = 'pt-BR';
+  vozAtivada = true;
+  try { localStorage.setItem('violeta-voz-resposta', 'true'); } catch (error) {
+    console.warn('Não foi possível ativar as respostas por voz.', error);
+  }
+  const voiceButton = document.getElementById('voiceReplyToggle');
+  if (voiceButton) {
+    voiceButton.classList.add('active');
+    voiceButton.setAttribute('aria-pressed', 'true');
+  }
+  const idioma = typeof getSiteLanguage === 'function' ? getSiteLanguage() : 'pt';
+  reconhecimento.lang = idioma === 'pt' ? 'pt-BR' : idioma;
   reconhecimento.interimResults = false;
   reconhecimento.maxAlternatives = 1;
 
