@@ -121,18 +121,20 @@ async function sendSimpleMessage() {
   const sessao = chatSession;
   const historicoEnviado = simpleChatHistory.slice();
   let resposta = '';
+  let timer;
 
   try {
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 20000);
-    const res = await fetch('/api/v1/chat/', {
+    timer = setTimeout(() => ctrl.abort(), 20000);
+    const chatApiBase = window.location.protocol === 'file:'
+      ? 'http://127.0.0.1:8000/api/v1'
+      : '/api/v1';
+    const res = await fetch(chatApiBase + '/chat/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       signal: ctrl.signal,
       body: JSON.stringify({ mensagem: text, historico: historicoEnviado })
     });
-    clearTimeout(timer);
-
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const dados = await res.json();
     resposta = dados && dados.resposta ? dados.resposta : respostaLocalDeFallback(text);
@@ -141,6 +143,8 @@ async function sendSimpleMessage() {
        ou falha de rede) — cai para as respostas locais por palavra-chave,
        para que o chat continue funcional mesmo offline. */
     resposta = respostaLocalDeFallback(text);
+  } finally {
+    clearTimeout(timer);
   }
 
   removerDigitando();
