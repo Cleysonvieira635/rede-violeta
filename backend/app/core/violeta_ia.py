@@ -410,8 +410,6 @@ Princípios de design (definidos pelo escopo do projeto):
      um provedor externo.
 """
 
-from __future__ import annotations
-
 import re
 from typing import Any
 
