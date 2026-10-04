@@ -108,6 +108,8 @@ class AlertaComunitarioOut(AlertaComunitarioCreate):
     id: int
     confirmacoes: int = 0
     criado_em: datetime
+    resumo_ia: Optional[str] = None
+    moderado_ia: bool = False
 
     class Config:
         from_attributes = True
