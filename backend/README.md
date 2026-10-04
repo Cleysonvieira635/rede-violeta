@@ -89,6 +89,17 @@ aqui", "ameaça"), a resposta de segurança (190/180) é sempre gerada
 localmente, sem depender da IA externa — por segurança, essa parte
 nunca é delegada ao modelo de linguagem.
 
+Além do acolhimento geral, a Violeta IA foi instruída (e o fallback
+local também cobre, nos três idiomas) a explicar:
+
+- os tipos de violência previstos na Lei Maria da Penha (física,
+  psicológica, sexual, patrimonial, moral);
+- o passo a passo para denunciar (190, 180, DEAM/Boletim de Ocorrência,
+  Defensoria Pública/medida protetiva, IML);
+- como reunir e guardar provas (prints, fotos, áudios, testemunhas);
+- como ajudar uma pessoa próxima que esteja sofrendo violência, sem
+  julgamento e sem colocar ninguém em risco.
+
 Nenhuma mensagem de chat é salva no banco de dados: o histórico de
 conversa trafega apenas dentro da própria requisição (enviado pelo
 frontend) e não é persistido no servidor.

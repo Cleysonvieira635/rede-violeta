@@ -986,6 +986,21 @@ footer i            { color: #c084fc; }
   line-height: 1.65;
 }
 .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn-ai-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: .25s;
+  background: linear-gradient(135deg, var(--primary-dk), var(--primary));
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(124,58,237,.35);
+}
+.btn-ai-hero:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(124,58,237,.5); }
 .btn-emergency-hero {
   display: inline-flex;
   align-items: center;
