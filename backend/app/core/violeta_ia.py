@@ -20,6 +20,7 @@ Princípios de design (definidos pelo escopo do projeto):
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 import httpx
@@ -42,7 +43,11 @@ SYSTEM_PROMPT = (
     "qualquer outra orientação.\n"
     "- Nunca minimize, julgue ou duvide do relato da pessoa.\n"
     "- Responda no idioma solicitado pela pessoa, em tom acolhedor, claro "
-    "e objetivo (no máximo 4-5 frases por resposta).\n\n"
+    "e objetivo (no máximo 4-5 frases por resposta).\n"
+    "- Responda sempre em texto corrido simples, SEM formatação markdown "
+    "(sem **negrito**, sem *itálico*, sem títulos com #, sem listas com "
+    "asteriscos ou hífens). Se precisar listar itens, separe por vírgulas "
+    "ou numere como '1)', '2)', '3)' dentro do próprio texto.\n\n"
     "Tópicos que você deve saber explicar quando perguntada:\n\n"
     "1) TIPOS DE VIOLÊNCIA (Lei Maria da Penha, art. 7º):\n"
     "   - Física: qualquer conduta que ofenda a integridade/saúde "
@@ -173,6 +178,21 @@ _REGRAS = (
 )
 
 
+def _remover_markdown(texto: str) -> str:
+    """Remove formatação markdown (negrito, itálico, títulos e marcadores
+    de lista) que a IA às vezes gera mesmo quando instruída a não usar,
+    já que o widget de chat exibe o texto puro, sem interpretar markdown."""
+    texto = re.sub(r"\*\*\*(.+?)\*\*\*", r"\1", texto)
+    texto = re.sub(r"\*\*(.+?)\*\*", r"\1", texto)
+    texto = re.sub(r"__(.+?)__", r"\1", texto)
+    texto = re.sub(r"(?<!\*)\*(?!\*)([^\n*]+?)\*(?!\*)", r"\1", texto)
+    texto = re.sub(r"(?<!_)_(?!_)([^\n_]+?)_(?!_)", r"\1", texto)
+    texto = re.sub(r"^\s*#{1,6}\s*", "", texto, flags=re.MULTILINE)
+    texto = re.sub(r"^\s*[\*\-]\s+", "- ", texto, flags=re.MULTILINE)
+    texto = re.sub(r"\*+", "", texto)
+    return texto.strip()
+
+
 def contem_sinal_de_perigo(texto: str) -> bool:
     t = texto.lower()
     return any(termo in t for termo in _TERMOS_PERIGO)
@@ -282,7 +302,8 @@ async def gerar_resposta_ia(mensagem: str, historico: list[ChatMensagem], idioma
             )
             resp.raise_for_status()
             data = resp.json()
-            return data["choices"][0]["message"]["content"].strip()
+            conteudo = data["choices"][0]["message"]["content"].strip()
+            return _remover_markdown(conteudo)
     except Exception:
         # Qualquer falha (sem internet, chave inválida, timeout, quota
         # excedida, etc.) cai silenciosamente para o fallback local —
