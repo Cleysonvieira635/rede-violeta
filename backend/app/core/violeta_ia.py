@@ -360,7 +360,11 @@ async def analisar_alerta_ia(titulo: str, descricao: str) -> dict[str, str] | No
             {"role": "user", "content": f"Título: {titulo}\nDescrição: {descricao}"},
         ],
         "temperature": 0.2,
-        "max_tokens": 120,
+        # Alguns modelos (ex.: gpt-oss da Groq) gastam parte do orçamento de
+        # tokens em "raciocínio" interno antes de gerar a resposta final —
+        # por isso o limite precisa ser generoso, senão o conteúdo final
+        # chega vazio e a moderação falha silenciosamente.
+        "max_tokens": 600,
     }
     headers: dict[str, str] = {
         "Authorization": f"Bearer {settings.openai_api_key}",
@@ -376,7 +380,7 @@ async def analisar_alerta_ia(titulo: str, descricao: str) -> dict[str, str] | No
             )
             resp.raise_for_status()
             data = resp.json()
-            conteudo = data["choices"][0]["message"]["content"].strip()
+            conteudo = (data["choices"][0]["message"].get("content") or "").strip()
             conteudo = re.sub(r"^```(?:json)?\s*|\s*```$", "", conteudo.strip())
             resultado = json.loads(conteudo)
             urgencia = str(resultado.get("urgencia", "")).strip().lower()
