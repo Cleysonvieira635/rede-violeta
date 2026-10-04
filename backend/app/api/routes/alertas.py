@@ -40,3 +40,12 @@ def confirmar_alerta(alerta_id: int, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(alerta)
     return alerta
+
+@router.delete("/{alerta_id}", status_code=204)
+def remover_alerta(alerta_id: int, db: Session = Depends(get_db)):
+    alerta = db.query(AlertaComunitario).filter(AlertaComunitario.id == alerta_id).first()
+    if not alerta:
+        raise HTTPException(status_code=404, detail="Alerta não encontrado")
+    db.delete(alerta)
+    db.commit()
+    return None
