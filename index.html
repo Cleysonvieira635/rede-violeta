@@ -27,18 +27,7 @@
   </div>
 </section>
 
-<!-- ─── Saída rápida ─── -->
-<button class="quick-exit-btn" id="quickExitBtn" onclick="saidaRapida()" aria-label="Sair rapidamente deste site e ir para uma página neutra">
-  <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Sair rápido
-</button>
-<button class="discreet-mode-btn" id="discreetModeBtn" type="button" onclick="alternarModoDiscreto()" aria-pressed="false">
-  <i class="fa-solid fa-eye-slash" aria-hidden="true"></i> Modo discreto
-</button>
-
 <!-- ─── Acessibilidade ─── -->
-<button class="a11y-fab" id="a11yFab" onclick="painelAcessibilidade()" aria-haspopup="true" aria-expanded="false" aria-controls="a11yPanel" aria-label="Abrir opções de acessibilidade">
-  <i class="fa-solid fa-universal-access" aria-hidden="true"></i>
-</button>
 <div class="a11y-panel" id="a11yPanel" role="dialog" aria-modal="false" aria-labelledby="a11yPanelTitle">
   <h2 id="a11yPanelTitle">♿ Acessibilidade
     <button class="a11y-close" onclick="painelAcessibilidade(false)" aria-label="Fechar opções de acessibilidade">&times;</button>
@@ -97,8 +86,16 @@
   <i class="fa-solid fa-ribbon"></i> AGOSTO LILÁS 2026 <span>|</span> Pelo fim da violência contra a mulher <span>|</span> 🌸
 </div>
 
-<div class="academic-bar">
-  Projeto acadêmico desenvolvido para a <strong>Faculdade Cruzeiro do Sul</strong>
+<div class="utility-bar" role="toolbar" aria-label="Acessibilidade e segurança">
+  <button class="a11y-fab" id="a11yFab" onclick="painelAcessibilidade()" aria-haspopup="true" aria-expanded="false" aria-controls="a11yPanel" aria-label="Abrir opções de acessibilidade">
+    <i class="fa-solid fa-universal-access" aria-hidden="true"></i><span>Acessibilidade</span>
+  </button>
+  <button class="discreet-mode-btn" id="discreetModeBtn" type="button" onclick="alternarModoDiscreto()" aria-pressed="false">
+    <i class="fa-solid fa-eye-slash" aria-hidden="true"></i> Modo secreto
+  </button>
+  <button class="quick-exit-btn" id="quickExitBtn" onclick="saidaRapida()" aria-label="Sair rapidamente deste site e ir para uma página neutra">
+    <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Saída rápida
+  </button>
 </div>
 
 <!-- ───────── Header ───────── -->

@@ -6,6 +6,10 @@
     en: {
       'Idioma': 'Language',
       'Sair rápido': 'Quick exit',
+      'Saída rápida': 'Quick exit',
+      'Modo secreto': 'Discreet mode',
+      'Desativar modo secreto': 'Turn off discreet mode',
+      'Acessibilidade e segurança': 'Accessibility and safety',
       'Sem promessa de sigilo': 'No confidentiality guarantee',
       'Leia como seus dados são tratados': 'Read how your data is handled',
       'Dados enviados ao servidor': 'Data sent to the server',
@@ -422,6 +426,10 @@
     es: {
       'Idioma': 'Idioma',
       'Sair rápido': 'Salida rápida',
+      'Saída rápida': 'Salida rápida',
+      'Modo secreto': 'Modo discreto',
+      'Desativar modo secreto': 'Desactivar modo discreto',
+      'Acessibilidade e segurança': 'Accesibilidad y seguridad',
       'Sem promessa de sigilo': 'Sin garantía de confidencialidad',
       'Leia como seus dados são tratados': 'Lee cómo se tratan tus datos',
       'Dados enviados ao servidor': 'Datos enviados al servidor',

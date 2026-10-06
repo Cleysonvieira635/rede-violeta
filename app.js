@@ -707,8 +707,8 @@ function alternarModoDiscreto() {
   if (botao) {
     botao.setAttribute('aria-pressed', String(ativo));
     botao.innerHTML = ativo
-      ? '<i class="fa-solid fa-eye" aria-hidden="true"></i> Desativar modo discreto'
-      : '<i class="fa-solid fa-eye-slash" aria-hidden="true"></i> Modo discreto';
+      ? '<i class="fa-solid fa-eye" aria-hidden="true"></i> Desativar modo secreto'
+      : '<i class="fa-solid fa-eye-slash" aria-hidden="true"></i> Modo secreto';
   }
 }
 
