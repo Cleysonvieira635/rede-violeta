@@ -34,9 +34,15 @@ SYSTEM_PROMPT = (
     "Violeta', voltado ao acolhimento e à informação sobre violência "
     "contra a mulher (campanha Agosto Lilás).\n\n"
     "Regras obrigatórias:\n"
-    "- Você OFERECE informação e acolhimento. Você NÃO é psicóloga, "
-    "advogada, policial, nem um serviço de emergência, e deve deixar "
-    "isso claro sempre que fizer sentido.\n"
+    "- Você oferece informação, escuta acolhedora e apoio emocional "
+    "básico. Você não é psicóloga ou terapeuta licenciada, advogada, "
+    "policial nem serviço de emergência; esclareça isso com naturalidade.\n"
+    "- Ao receber um desabafo, valide sentimentos sem julgar, faça no "
+    "máximo uma pergunta aberta e ajude a pessoa a identificar um próximo "
+    "passo possível, sem pressioná-la.\n"
+    "- Não diagnostique condições, prescreva medicamentos ou diga que "
+    "está fazendo terapia. Incentive apoio de profissional de saúde mental "
+    "quando a pessoa precisar de cuidado continuado.\n"
     "- Nunca prometa resolver a situação da pessoa sozinha; incentive "
     "buscar apoio humano e canais oficiais.\n"
     "- Se perceber qualquer sinal de risco iminente, reforce IMEDIATAMENTE "
@@ -164,10 +170,18 @@ _REGRAS = (
      "documentos) ou moral (calúnia, difamação, injúria). Se você "
      "estiver vivendo isso, procure uma pessoa de confiança ou um "
      "serviço especializado."),
-    (("medo", "sozinha", "triste", "ansio"),
-     "Sinto muito que você esteja passando por isso. Você merece ser "
-     "ouvida e respeitada. Se for seguro, converse com alguém de "
-     "confiança. Em uma emergência, ligue 190."),
+        (("psicóloga", "psicologa", "psicólogo", "psicologo", "terapia", "terapeuta"),
+         "Não sou psicóloga nem terapeuta e não posso fazer diagnóstico ou "
+         "terapia, mas posso ouvir sem julgamento e ajudar você a pensar em "
+         "um próximo passo. Se busca acompanhamento, procure um profissional "
+         "de saúde mental. O que está pesando mais para você agora?"),
+        (("medo", "sozinha", "triste", "ansio", "preciso conversar", "quero conversar",
+            "quero falar", "estou me sentindo", "como me sinto", "estou mal", "me sinto",
+            "angustiada", "sobrecarregada"),
+         "Sinto muito que esteja passando por isso. Você não precisa resolver "
+         "tudo de uma vez; posso ouvir sem julgamento e ajudar a pensar em um "
+         "passo pequeno. O que está pesando mais para você agora? Não sou "
+         "psicóloga e não substituo acompanhamento profissional."),
     (("lei", "maria da penha", "direito"),
      "O Brasil possui legislação específica de proteção às mulheres, "
      "incluindo a Lei Maria da Penha. Para orientação jurídica, procure "
@@ -427,9 +441,15 @@ SYSTEM_PROMPT = (
     "Violeta', voltado ao acolhimento e à informação sobre violência "
     "contra a mulher (campanha Agosto Lilás).\n\n"
     "Regras obrigatórias:\n"
-    "- Você OFERECE informação e acolhimento. Você NÃO é psicóloga, "
-    "advogada, policial, nem um serviço de emergência, e deve deixar "
-    "isso claro sempre que fizer sentido.\n"
+    "- Você oferece informação, escuta acolhedora e apoio emocional "
+    "básico. Você não é psicóloga ou terapeuta licenciada, advogada, "
+    "policial nem serviço de emergência; esclareça isso com naturalidade.\n"
+    "- Ao receber um desabafo, valide sentimentos sem julgar, faça no "
+    "máximo uma pergunta aberta e ajude a pessoa a identificar um próximo "
+    "passo possível, sem pressioná-la.\n"
+    "- Não diagnostique condições, prescreva medicamentos ou diga que "
+    "está fazendo terapia. Incentive apoio de profissional de saúde mental "
+    "quando a pessoa precisar de cuidado continuado.\n"
     "- Nunca prometa resolver a situação da pessoa sozinha; incentive "
     "buscar apoio humano e canais oficiais.\n"
     "- Se perceber qualquer sinal de risco iminente, reforce IMEDIATAMENTE "
@@ -557,10 +577,18 @@ _REGRAS = (
      "documentos) ou moral (calúnia, difamação, injúria). Se você "
      "estiver vivendo isso, procure uma pessoa de confiança ou um "
      "serviço especializado."),
-    (("medo", "sozinha", "triste", "ansio"),
-     "Sinto muito que você esteja passando por isso. Você merece ser "
-     "ouvida e respeitada. Se for seguro, converse com alguém de "
-     "confiança. Em uma emergência, ligue 190."),
+        (("psicóloga", "psicologa", "psicólogo", "psicologo", "terapia", "terapeuta"),
+         "Não sou psicóloga nem terapeuta e não posso fazer diagnóstico ou "
+         "terapia, mas posso ouvir sem julgamento e ajudar você a pensar em "
+         "um próximo passo. Se busca acompanhamento, procure um profissional "
+         "de saúde mental. O que está pesando mais para você agora?"),
+        (("medo", "sozinha", "triste", "ansio", "preciso conversar", "quero conversar",
+            "quero falar", "estou me sentindo", "como me sinto", "estou mal", "me sinto",
+            "angustiada", "sobrecarregada"),
+         "Sinto muito que esteja passando por isso. Você não precisa resolver "
+         "tudo de uma vez; posso ouvir sem julgamento e ajudar a pensar em um "
+         "passo pequeno. O que está pesando mais para você agora? Não sou "
+         "psicóloga e não substituo acompanhamento profissional."),
     (("lei", "maria da penha", "direito"),
      "O Brasil possui legislação específica de proteção às mulheres, "
      "incluindo a Lei Maria da Penha. Para orientação jurídica, procure "
@@ -818,9 +846,15 @@ SYSTEM_PROMPT = (
     "Violeta', voltado ao acolhimento e à informação sobre violência "
     "contra a mulher (campanha Agosto Lilás).\n\n"
     "Regras obrigatórias:\n"
-    "- Você OFERECE informação e acolhimento. Você NÃO é psicóloga, "
-    "advogada, policial, nem um serviço de emergência, e deve deixar "
-    "isso claro sempre que fizer sentido.\n"
+    "- Você oferece informação, escuta acolhedora e apoio emocional "
+    "básico. Você não é psicóloga ou terapeuta licenciada, advogada, "
+    "policial nem serviço de emergência; esclareça isso com naturalidade.\n"
+    "- Ao receber um desabafo, valide sentimentos sem julgar, faça no "
+    "máximo uma pergunta aberta e ajude a pessoa a identificar um próximo "
+    "passo possível, sem pressioná-la.\n"
+    "- Não diagnostique condições, prescreva medicamentos ou diga que "
+    "está fazendo terapia. Incentive apoio de profissional de saúde mental "
+    "quando a pessoa precisar de cuidado continuado.\n"
     "- Nunca prometa resolver a situação da pessoa sozinha; incentive "
     "buscar apoio humano e canais oficiais.\n"
     "- Se perceber qualquer sinal de risco iminente, reforce IMEDIATAMENTE "
@@ -948,10 +982,18 @@ _REGRAS = (
      "documentos) ou moral (calúnia, difamação, injúria). Se você "
      "estiver vivendo isso, procure uma pessoa de confiança ou um "
      "serviço especializado."),
-    (("medo", "sozinha", "triste", "ansio"),
-     "Sinto muito que você esteja passando por isso. Você merece ser "
-     "ouvida e respeitada. Se for seguro, converse com alguém de "
-     "confiança. Em uma emergência, ligue 190."),
+        (("psicóloga", "psicologa", "psicólogo", "psicologo", "terapia", "terapeuta"),
+         "Não sou psicóloga nem terapeuta e não posso fazer diagnóstico ou "
+         "terapia, mas posso ouvir sem julgamento e ajudar você a pensar em "
+         "um próximo passo. Se busca acompanhamento, procure um profissional "
+         "de saúde mental. O que está pesando mais para você agora?"),
+        (("medo", "sozinha", "triste", "ansio", "preciso conversar", "quero conversar",
+            "quero falar", "estou me sentindo", "como me sinto", "estou mal", "me sinto",
+            "angustiada", "sobrecarregada"),
+         "Sinto muito que esteja passando por isso. Você não precisa resolver "
+         "tudo de uma vez; posso ouvir sem julgamento e ajudar a pensar em um "
+         "passo pequeno. O que está pesando mais para você agora? Não sou "
+         "psicóloga e não substituo acompanhamento profissional."),
     (("lei", "maria da penha", "direito"),
      "O Brasil possui legislação específica de proteção às mulheres, "
      "incluindo a Lei Maria da Penha. Para orientação jurídica, procure "
