@@ -174,7 +174,14 @@ async function sendSimpleMessage() {
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const dados = await res.json();
-    resposta = dados && dados.resposta ? dados.resposta : respostaLocalDeFallback(text, idioma);
+    const respostaGenerica = 'Posso ajudar com informações sobre os recursos da Rede Violeta, canais de apoio, tipos de violência ou formas de buscar ajuda. Sou a Violeta! 💜';
+    const temaGuiado = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const respostaGeneralista = dados?.resposta === respostaGenerica
+      || (/domestic|sexual|moral|stalking|perseg|cyberbullying|ciberbullying/.test(temaGuiado)
+        && dados?.resposta?.startsWith('Violência contra a mulher pode ser física'));
+    resposta = dados?.resposta && !respostaGeneralista
+      ? dados.resposta
+      : respostaLocalDeFallback(text, idioma);
   } catch (e) {
     /* Backend indisponível — usa respostas locais para manter o chat acessível. */
     resposta = respostaLocalDeFallback(text, idioma);

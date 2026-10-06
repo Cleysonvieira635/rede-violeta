@@ -10,13 +10,13 @@ from app.api.api import api_router
 
 Base.metadata.create_all(bind=engine)
 
-# Migração leve e idempotente: bancos criados antes da coluna 'resumo_ia'/
-# 'moderado_ia' existir no modelo não ganham essas colunas automaticamente
-# via create_all (que só cria tabelas novas, não altera tabelas já
-# existentes). Tentamos adicionar as colunas e ignoramos o erro caso elas
-# já existam — funciona tanto em SQLite quanto em Postgres.
+# Migração leve e idempotente: create_all não altera tabelas existentes.
+# Adicionamos colunas introduzidas por versões novas do modelo, preservando
+# os registros já armazenados.
 with engine.connect() as _conn:
     for _coluna_sql in (
+        "ALTER TABLE alertas_comunitarios ADD COLUMN urgencia VARCHAR DEFAULT 'media'",
+        "ALTER TABLE alertas_comunitarios ADD COLUMN confirmacoes INTEGER DEFAULT 0",
         "ALTER TABLE alertas_comunitarios ADD COLUMN resumo_ia TEXT",
         "ALTER TABLE alertas_comunitarios ADD COLUMN moderado_ia BOOLEAN DEFAULT 0",
     ):

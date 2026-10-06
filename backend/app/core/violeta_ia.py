@@ -21,7 +21,6 @@ Princípios de design (definidos pelo escopo do projeto):
 from __future__ import annotations
 
 import json
-<<<<<<< HEAD
 import re
 from typing import Any
 
@@ -415,8 +414,6 @@ Princípios de design (definidos pelo escopo do projeto):
      um provedor externo.
 """
 
-=======
->>>>>>> 1072469c05d9897b2a4bb0d299670207fd6513e3
 import re
 from typing import Any
 
@@ -719,10 +716,6 @@ async def responder(mensagem: str, historico: list[ChatMensagem], idioma: str = 
         return resposta_gerada, "ia", False
 
     return resposta_local(mensagem, idioma), "regras", False
-<<<<<<< HEAD
-=======
-
-
 _PROMPT_MODERACAO_ALERTA = (
     "Você é a Violeta IA, responsável por moderar alertas comunitários do "
     "projeto Rede Violeta (avisos enviados pela comunidade sobre situações "
@@ -1114,4 +1107,3 @@ async def responder(mensagem: str, historico: list[ChatMensagem], idioma: str = 
         return resposta_gerada, "ia", False
 
     return resposta_local(mensagem, idioma), "regras", False
->>>>>>> 1072469c05d9897b2a4bb0d299670207fd6513e3
