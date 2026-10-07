@@ -15,14 +15,3 @@ def criar_denuncia(dados: DenunciaCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(denuncia)
     return denuncia
-
-@router.get("/", response_model=List[DenunciaOut])
-def listar_denuncias(db: Session = Depends(get_db)):
-    return db.query(Denuncia).order_by(Denuncia.criado_em.desc()).all()
-
-@router.get("/{denuncia_id}", response_model=DenunciaOut)
-def obter_denuncia(denuncia_id: int, db: Session = Depends(get_db)):
-    denuncia = db.query(Denuncia).filter(Denuncia.id == denuncia_id).first()
-    if not denuncia:
-        raise HTTPException(status_code=404, detail="Denúncia não encontrada")
-    return denuncia

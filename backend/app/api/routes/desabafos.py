@@ -14,7 +14,3 @@ def criar_desabafo(dados: DesabafoCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(desabafo)
     return desabafo
-
-@router.get("/", response_model=List[DesabafoOut])
-def listar_desabafos(db: Session = Depends(get_db)):
-    return db.query(Desabafo).order_by(Desabafo.criado_em.desc()).all()

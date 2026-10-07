@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from sqlalchemy import text
 from app.core.config import settings
 from app.db.database import Base, engine
@@ -33,7 +33,7 @@ FRONTEND_DIR = Path(__file__).resolve().parents[2]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 app.include_router(api_router, prefix=settings.api_v1_prefix)
@@ -42,4 +42,24 @@ app.include_router(api_router, prefix=settings.api_v1_prefix)
 def healthcheck():
     return {"status": "ok", "projeto": "Fala Segura API"}
 
-app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
+PUBLIC_FILES = {
+    "index.html", "app.js", "language.js", "chat-widget.js", "style.css",
+    "manifest.webmanifest", "service-worker.js",
+}
+PUBLIC_DIRS = ("img", "video")
+
+
+@app.get("/", include_in_schema=False)
+def index():
+    return FileResponse(FRONTEND_DIR / "index.html")
+
+
+@app.get("/{caminho:path}", include_in_schema=False)
+def arquivo_publico(caminho: str):
+    alvo = (FRONTEND_DIR / caminho).resolve()
+    permitido = caminho in PUBLIC_FILES or (
+        caminho.split("/")[0] in PUBLIC_DIRS and FRONTEND_DIR.resolve() in alvo.parents
+    )
+    if not permitido or not alvo.is_file():
+        raise HTTPException(status_code=404)
+    return FileResponse(alvo)

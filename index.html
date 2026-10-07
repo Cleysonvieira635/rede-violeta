@@ -4,12 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rede Violeta</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com data:; img-src 'self' data: blob: https:; media-src 'self'; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; object-src 'none'; base-uri 'self'; form-action 'self'" />
+  <meta name="referrer" content="no-referrer" />
   <meta name="theme-color" content="#6b4d5b" />
   <meta name="description" content="Informações educativas e caminhos de apoio. Em emergência, ligue 190." />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>" />
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
@@ -89,9 +91,6 @@
 <div class="utility-bar" role="toolbar" aria-label="Acessibilidade e segurança">
   <button class="a11y-fab" id="a11yFab" onclick="painelAcessibilidade()" aria-haspopup="true" aria-expanded="false" aria-controls="a11yPanel" aria-label="Abrir opções de acessibilidade">
     <i class="fa-solid fa-universal-access" aria-hidden="true"></i><span>Acessibilidade</span>
-  </button>
-  <button class="discreet-mode-btn" id="discreetModeBtn" type="button" onclick="alternarModoDiscreto()" aria-pressed="false">
-    <i class="fa-solid fa-eye-slash" aria-hidden="true"></i> Modo secreto
   </button>
   <button class="quick-exit-btn" id="quickExitBtn" onclick="saidaRapida()" aria-label="Sair rapidamente deste site e ir para uma página neutra">
     <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Saída rápida
@@ -219,6 +218,15 @@
 
   <!-- ══════ ABA 1 — DESABAFO ══════ -->
   <section id="tab-desabafo" class="tab-pane active">
+
+    <div class="card presentation-video-card">
+      <h2 id="presentationVideoTitle"><i class="fa-solid fa-circle-play" aria-hidden="true"></i> Conheça a Rede Violeta</h2>
+      <p>Assista ao vídeo de apresentação do projeto.</p>
+      <video class="presentation-video" controls preload="metadata" playsinline aria-labelledby="presentationVideoTitle">
+        <source src="video/violeta.mp4" type="video/mp4" />
+        Seu navegador não oferece suporte à reprodução de vídeo.
+      </video>
+    </div>
 
     <div class="card banner-card">
       <img src="img/img.jpeg" alt="Rede Violeta — Agosto Lilás — Violência não é amor" class="banner-img" />
@@ -927,7 +935,7 @@
           <li>Busca por serviços e locais de apoio;</li>
           <li>Plano de segurança;</li>
           <li>Recursos de acessibilidade;</li>
-          <li>Modo discreto e saída rápida;</li>
+          <li>Saída rápida;</li>
           <li><strong>Violeta</strong>, assistente virtual informativa para ajudar durante a navegação.</li>
         </ul>
       </section>
@@ -941,7 +949,7 @@
       <section class="about-block">
         <h3>Privacidade e segurança</h3>
         <p>Sabemos que buscar informações sobre violência pode exigir cuidado e discrição.</p>
-        <p>A Rede Violeta oferece recursos como <strong>modo discreto, saída rápida e plano de segurança</strong> para apoiar uma navegação mais cuidadosa.</p>
+        <p>A Rede Violeta oferece recursos como <strong>saída rápida e plano de segurança</strong> para apoiar uma navegação mais cuidadosa.</p>
       </section>
 
       <section class="about-block">
