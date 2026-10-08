@@ -555,7 +555,7 @@ input:focus, select:focus, .form-group textarea:focus { border-color: var(--prim
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-track { background: var(--lilac-light); }
 ::-webkit-scrollbar-thumb { background: #c084fc; border-radius: 999px; }
 
 /* ── Utilitários ── */
