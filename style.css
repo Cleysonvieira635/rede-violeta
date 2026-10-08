@@ -1129,7 +1129,7 @@ footer i            { color: #c084fc; }
   object-fit: cover;
   object-position: center;
   border-radius: 10px;
-  margin-bottom: 14px;
+  margin: 14px 0;
 }
 .simple-case-card:hover { transform: translateY(-3px); border-color: var(--lilac); }
 .case-year-badge {
