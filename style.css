@@ -1158,6 +1158,20 @@ footer i            { color: #c084fc; }
   font-size: .82rem;
   font-weight: 600;
 }
+@media (min-width: 601px) {
+  .simple-case-card {
+    display: flex;
+    flex-direction: column;
+  }
+  .simple-case-card > .case-image {
+    margin: auto auto 14px;
+  }
+  .case-msg-box {
+    display: flex;
+    align-items: center;
+    min-height: 72px;
+  }
+}
 .cases-note {
   margin-top: 18px;
   padding: 12px 16px;
