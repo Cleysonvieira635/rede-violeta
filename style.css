@@ -146,7 +146,7 @@ header p  { font-size: .9rem; opacity: .82; margin-top: 6px; position: relative;
   transition: color .2s, border-color .2s;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 7px;
   white-space: nowrap;
 }
