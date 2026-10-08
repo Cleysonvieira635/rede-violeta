@@ -909,9 +909,9 @@ footer i            { color: #c084fc; }
 .presentation-video {
   display: block;
   width: 100%;
-  height: auto;
   aspect-ratio: 16 / 9;
-  object-fit: contain;
+  height: auto;
+  object-fit: cover;
   border-radius: 10px;
   background: #1e1b4b;
 }
