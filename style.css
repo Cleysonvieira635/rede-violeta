@@ -1122,6 +1122,15 @@ footer i            { color: #c084fc; }
   box-shadow: 0 7px 25px rgba(91,62,108,.06);
   transition: .25s;
 }
+.case-image {
+  display: block;
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
 .simple-case-card:hover { transform: translateY(-3px); border-color: var(--lilac); }
 .case-year-badge {
   display: inline-block;
