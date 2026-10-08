@@ -1962,6 +1962,17 @@ body.a11y-strong-focus [tabindex]:focus-visible {
   }
 
   .map-container {
-    height: min(450px, 70vh);
+    height: 320px;
+  }
+
+  .map-legend {
+    display: grid;
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  .support-search-row .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
