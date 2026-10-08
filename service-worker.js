@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rede-violeta-static-v14';
+const CACHE_NAME = 'rede-violeta-static-v15';
 const STATIC_ASSETS = [
   './',
   './index.html',
