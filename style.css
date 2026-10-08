@@ -909,11 +909,13 @@ footer i            { color: #c084fc; }
 .presentation-video {
   display: block;
   width: 100%;
+  max-width: 100%;
   aspect-ratio: 16 / 9;
   height: auto;
   object-fit: cover;
   border-radius: 10px;
   background: #1e1b4b;
+  margin-inline: auto;
 }
 .banner-card { padding: 0; overflow: hidden; }
 .banner-img  { width: 100%; height: auto; display: block; border-radius: var(--radius); }
@@ -1127,6 +1129,7 @@ footer i            { color: #c084fc; }
   width: 120px;
   height: 120px;
   max-width: 120px;
+  flex: 0 0 120px;
   object-fit: cover;
   object-position: center;
   border-radius: 10px;
